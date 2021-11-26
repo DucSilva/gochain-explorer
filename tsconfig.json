@@ -1,5 +1,16 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@Pages/*": ["pages/*"],
+      "@Styles/*": ["styles/*"],
+      "@Components/*": ["components/*"],
+      "@Redux/*": ["redux/*"],
+      "@Utils/*": ["utils/*"],
+      "@Models/*": ["models/*"],
+      "@Public/*": ["public/*"],
+      "@Hooks/*": ["hooks/*"]
+    },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -15,6 +26,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.scss", "redux/store.ts"],
   "exclude": ["node_modules"]
 }
