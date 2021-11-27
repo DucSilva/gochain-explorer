@@ -4,7 +4,10 @@ import {
   GET_ADDRESS_INTERNAL_REQUEST,
   GET_ADDRESS_REQUEST,
   GET_ADDRESS_TRANSACTIONS_REQUEST,
+  GET_TOKEN_HOLDERS_REQUEST,
   getAddressFailed,
+  getAddressHolderFailed,
+  getAddressHolderSuccess,
   getAddressInternalFailed,
   getAddressInternalSuccess,
   getAddressSuccess,
@@ -50,7 +53,6 @@ function* getAddressTransactions({ payload }: any) {
 }
 
 function* getAddressInternal({ payload }: any) {
-  console.log('payload', payload)
   const { addrHash, currentPage, pageSize } = payload || {};
   let _data = {
     limit: pageSize,
@@ -72,10 +74,33 @@ function* getAddressInternal({ payload }: any) {
   }
 }
 
+function* getAddressHolders({ payload }: any) {
+  const { addrHash, currentPage, pageSize } = payload || {};
+  let _data = {
+    limit: pageSize,
+    skip: currentPage === 1 ? 0 : (currentPage - 1) * pageSize,
+  };
+
+  try {
+    if (addrHash?.addrHash) {
+      const { data } = yield call(
+        request.getAddressTokenHolders,
+        addrHash?.addrHash,
+        _data
+      );
+
+      yield put(getAddressHolderSuccess(data));
+    }
+  } catch (error) {
+    yield put(getAddressHolderFailed(error));
+  }
+}
+
 export function* addressSaga() {
   yield all([
     takeLatest(GET_ADDRESS_REQUEST, getAddressContract),
     takeLatest(GET_ADDRESS_TRANSACTIONS_REQUEST, getAddressTransactions),
     takeLatest(GET_ADDRESS_INTERNAL_REQUEST, getAddressInternal),
+    takeLatest(GET_TOKEN_HOLDERS_REQUEST, getAddressHolders),
   ]);
 }

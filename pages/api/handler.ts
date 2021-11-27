@@ -51,4 +51,9 @@ export const request = {
       params: data,
     });
   },
+  getAddressTokenHolders(addrHash: string, data?: any) {
+    return ins.get("/address/" + addrHash + "/holders", {
+      params: data,
+    });
+  },
 };

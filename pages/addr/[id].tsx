@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AddrInternalTXS from "@Components/AddrInternalTXS";
 import AddrTransactions from "@Components/AddrTransactions";
 import AppLayout from "@Components/Layout/AppLayout";
+import ContractSource from "@Components/ContractSource";
 import ControlledTabs from "@Components/Tabs";
 import Head from "next/head";
 import Interactor from "@Components/Interactor";
@@ -51,7 +52,7 @@ const Address = () => {
       title: `${addr?.token_symbol || "Internal"} Transfers`,
       description: `Internal ${addr?.token_symbol || ""} token transfers.`,
       eventKey: "internal_transactions",
-      renderTab: () => <AddrInternalTXS addr={queryId} />,
+      renderTab: () => <AddrInternalTXS addrHash={queryId} />,
       isRender: addr?.contract,
     },
     {
@@ -60,7 +61,7 @@ const Address = () => {
         addr?.token_symbol || ""
       } tokens.`,
       eventKey: "holders",
-      renderTab: () => <TokenHolders addr={addr} />,
+      renderTab: () => <TokenHolders addrHash={queryId} />,
       isRender: addr?.contract,
     },
     {
@@ -88,7 +89,7 @@ const Address = () => {
       title: "Contract Source",
       description: "",
       eventKey: "contract_source",
-      renderTab: () => <OwnedToken addr={addr} />,
+      renderTab: () => <ContractSource addr={addr} />,
       isRender: addr?.contract,
     },
   ];
