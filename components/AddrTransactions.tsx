@@ -7,7 +7,7 @@ import { YY_MM_DD_HH_mm_ss } from "@Utils/constants";
 import { getAddressTransactions } from "@Redux/actions/address/index";
 import moment from "moment";
 
-const AddrTransactions = (addrHash: string) => {
+const AddrTransactions = (addrHash: any) => {
   const { transactions, addr } = useSelector((state) => state?.address) || [];
   const [currentPage, setCurrentPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(25);

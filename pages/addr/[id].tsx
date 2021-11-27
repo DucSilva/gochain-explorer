@@ -51,7 +51,7 @@ const Address = () => {
       title: `${addr?.token_symbol || "Internal"} Transfers`,
       description: `Internal ${addr?.token_symbol || ""} token transfers.`,
       eventKey: "internal_transactions",
-      renderTab: () => <AddrInternalTXS addr={addr} />,
+      renderTab: () => <AddrInternalTXS addr={queryId} />,
       isRender: addr?.contract,
     },
     {

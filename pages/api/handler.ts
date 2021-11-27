@@ -46,4 +46,9 @@ export const request = {
   getAddressTransactions(addrHash: string, data?: any) {
     return ins.get("/address/" + addrHash + "/transactions", { params: data });
   },
+  getAddressInternal(addrHash: string, data?: any) {
+    return ins.get("/address/" + addrHash + "/internal_transactions", {
+      params: data,
+    });
+  },
 };

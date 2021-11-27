@@ -1,9 +1,12 @@
 import * as Effects from "redux-saga/effects";
 
 import {
+  GET_ADDRESS_INTERNAL_REQUEST,
   GET_ADDRESS_REQUEST,
   GET_ADDRESS_TRANSACTIONS_REQUEST,
   getAddressFailed,
+  getAddressInternalFailed,
+  getAddressInternalSuccess,
   getAddressSuccess,
   getAddressTransactionsFailed,
   getAddressTransactionsSuccess,
@@ -46,9 +49,33 @@ function* getAddressTransactions({ payload }: any) {
   }
 }
 
+function* getAddressInternal({ payload }: any) {
+  console.log('payload', payload)
+  const { addrHash, currentPage, pageSize } = payload || {};
+  let _data = {
+    limit: pageSize,
+    skip: currentPage === 1 ? 0 : (currentPage - 1) * pageSize,
+  };
+
+  try {
+    if (addrHash?.addrHash) {
+      const { data } = yield call(
+        request.getAddressInternal,
+        addrHash?.addrHash,
+        _data
+      );
+
+      yield put(getAddressInternalSuccess(data));
+    }
+  } catch (error) {
+    yield put(getAddressInternalFailed(error));
+  }
+}
+
 export function* addressSaga() {
   yield all([
     takeLatest(GET_ADDRESS_REQUEST, getAddressContract),
     takeLatest(GET_ADDRESS_TRANSACTIONS_REQUEST, getAddressTransactions),
+    takeLatest(GET_ADDRESS_INTERNAL_REQUEST, getAddressInternal),
   ]);
 }
