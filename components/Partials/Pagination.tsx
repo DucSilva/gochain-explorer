@@ -1,6 +1,7 @@
-import React from "react";
+import { DOTS, usePagination } from "@Hooks/usePagination";
+
 import { PAGE_PAGINATION } from "@Utils/enums";
-import { usePagination, DOTS } from "@Hooks/usePagination";
+import React from "react";
 import classnames from "classnames";
 
 const Pagination = ({
@@ -9,7 +10,7 @@ const Pagination = ({
   pageSize,
   onChangePageSize,
   onPageChange,
-  siblingCount = 100,
+  siblingCount = 5,
 }: any) => {
   const paginationRange = usePagination({
     currentPage,
@@ -39,10 +40,11 @@ const Pagination = ({
           Items per page:
           <select
             onChange={(e) => {
-                onChangePageSize(e.target.value)
-                onPageChange(1)
+              onChangePageSize(e.target.value);
+              onPageChange(1);
             }}
             defaultValue={25}
+            className="border-0"
           >
             {PAGE_PAGINATION.map((size: any, index: any) => {
               return (

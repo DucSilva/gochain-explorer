@@ -5,6 +5,7 @@ import "@Public/assets/styles/main.scss";
 import { Context, createWrapper } from "next-redux-wrapper";
 import { Store, createStore } from "redux";
 
+import NextNprogress from "nextjs-progressbar";
 import { Provider } from "react-redux";
 import initializeStore from "@Redux/store";
 
@@ -15,6 +16,13 @@ const store = initializeStore(initialState);
 function MyApp({ Component, pageProps }: any) {
   return (
     <Provider store={store}>
+      <NextNprogress
+        color="#29D"
+        startPosition={0.3}
+        stopDelayMs={500}
+        height={2}
+        showOnShallow={true}
+      />
       <Component {...pageProps} />;
     </Provider>
   );
