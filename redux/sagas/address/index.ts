@@ -5,14 +5,17 @@ import {
   GET_ADDRESS_REQUEST,
   GET_ADDRESS_TRANSACTIONS_REQUEST,
   GET_TOKEN_HOLDERS_REQUEST,
+  GET_TOKEN_TXS_REQUEST,
   getAddressFailed,
   getAddressHolderFailed,
   getAddressHolderSuccess,
   getAddressInternalFailed,
   getAddressInternalSuccess,
   getAddressSuccess,
+  getAddressTokenTXSFailed,
+  getAddressTokenTXSSuccess,
   getAddressTransactionsFailed,
-  getAddressTransactionsSuccess,
+  getAddressTransactionsSuccess
 } from "@Redux/actions/address";
 import { all, put, takeLatest } from "redux-saga/effects";
 
@@ -96,11 +99,35 @@ function* getAddressHolders({ payload }: any) {
   }
 }
 
+function* getAddressTokenTXS({ payload }: any) {
+  const { addrHash, currentPage, pageSize } = payload || {};
+  let _data = {
+    limit: pageSize,
+    skip: currentPage === 1 ? 0 : (currentPage - 1) * pageSize,
+    token_transactions: true,
+  };
+
+  try {
+    if (addrHash?.addrHash) {
+      const { data } = yield call(
+        request.getAddressInternal,
+        addrHash?.addrHash,
+        _data
+      );
+
+      yield put(getAddressTokenTXSSuccess(data));
+    }
+  } catch (error) {
+    yield put(getAddressTokenTXSFailed(error));
+  }
+}
+
 export function* addressSaga() {
   yield all([
     takeLatest(GET_ADDRESS_REQUEST, getAddressContract),
     takeLatest(GET_ADDRESS_TRANSACTIONS_REQUEST, getAddressTransactions),
     takeLatest(GET_ADDRESS_INTERNAL_REQUEST, getAddressInternal),
     takeLatest(GET_TOKEN_HOLDERS_REQUEST, getAddressHolders),
+    takeLatest(GET_TOKEN_TXS_REQUEST, getAddressTokenTXS),
   ]);
 }

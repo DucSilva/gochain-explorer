@@ -13,6 +13,9 @@ import {
   GET_TOKEN_HOLDERS_FAILED,
   GET_TOKEN_HOLDERS_REQUEST,
   GET_TOKEN_HOLDERS_SUCCESS,
+  GET_TOKEN_TXS_FAILED,
+  GET_TOKEN_TXS_REQUEST,
+  GET_TOKEN_TXS_SUCCESS,
 } from "@Redux/actions/address/index";
 
 const initialState = {
@@ -23,6 +26,7 @@ const initialState = {
   transactions: [],
   internal_transactions: [],
   token_holders: [],
+  token_transactions: [],
 };
 
 const addressReducer = (state = initialState, action: any) => {
@@ -131,6 +135,34 @@ const addressReducer = (state = initialState, action: any) => {
     }
 
     case GET_TOKEN_HOLDERS_FAILED: {
+      const { error } = action;
+      return {
+        ...state,
+        // isLoading: false,
+        error,
+      };
+    }
+
+    case GET_TOKEN_TXS_REQUEST: {
+      const { payload } = action;
+      return {
+        ...state,
+        // isLoading: true,
+        payload,
+      };
+    }
+
+    case GET_TOKEN_TXS_SUCCESS: {
+      const { token_transactions } = action?.data;
+
+      return {
+        ...state,
+        // isLoading: false,
+        token_transactions,
+      };
+    }
+
+    case GET_TOKEN_TXS_FAILED: {
       const { error } = action;
       return {
         ...state,

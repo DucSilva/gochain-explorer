@@ -13,6 +13,9 @@ export const GET_ADDRESS_INTERNAL_FAILED = "GET_ADDRESS_INTERNAL_FAILED";
 export const GET_TOKEN_HOLDERS_REQUEST = "GET_TOKEN_HOLDERS_REQUEST";
 export const GET_TOKEN_HOLDERS_SUCCESS = "GET_TOKEN_HOLDERS_SUCCESS";
 export const GET_TOKEN_HOLDERS_FAILED = "GET_TOKEN_HOLDERS_FAILED";
+export const GET_TOKEN_TXS_REQUEST = "GET_TOKEN_TXS_REQUEST";
+export const GET_TOKEN_TXS_SUCCESS = "GET_TOKEN_TXS_SUCCESS";
+export const GET_TOKEN_TXS_FAILED = "GET_TOKEN_TXS_FAILED";
 
 export const getAddress = (payload: any) => ({
   type: GET_ADDRESS_REQUEST,
@@ -79,5 +82,22 @@ export const getAddressHolderSuccess = (data: any) => {
 
 export const getAddressHolderFailed = (error: any) => ({
   type: GET_TOKEN_HOLDERS_FAILED,
+  error,
+});
+
+export const getAddressTokenTXS = (payload: any) => ({
+  type: GET_TOKEN_HOLDERS_REQUEST,
+  payload,
+});
+
+export const getAddressTokenTXSSuccess = (data: any) => {
+  return {
+    type: GET_TOKEN_HOLDERS_SUCCESS,
+    data,
+  };
+};
+
+export const getAddressTokenTXSFailed = (error: any) => ({
+  type: GET_TOKEN_TXS_FAILED,
   error,
 });

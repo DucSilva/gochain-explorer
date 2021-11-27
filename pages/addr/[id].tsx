@@ -68,7 +68,7 @@ const Address = () => {
       title: "Token Transfers",
       description: "Token transfers to and from this account.",
       eventKey: "token_transactions",
-      renderTab: () => <TokenTXS addr={addr} />,
+      renderTab: () => <TokenTXS addrHash={queryId} />,
       isRender: true,
     },
     {
