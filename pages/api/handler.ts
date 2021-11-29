@@ -66,4 +66,7 @@ export const request = {
       params: data,
     });
   },
+  getContract(addrHash: string) {
+    return ins.get("/address/" + addrHash + "/contract");
+  },
 };

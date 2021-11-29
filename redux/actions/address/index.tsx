@@ -1,3 +1,5 @@
+import { Contract } from '@Models/contract.model';
+
 export const GET_ADDRESS_REQUEST = "GET_ADDRESS_REQUEST";
 export const GET_ADDRESS_SUCCESS = "GET_ADDRESS_SUCCESS";
 export const GET_ADDRESS_FAILED = "GET_ADDRESS_FAILED";
@@ -18,7 +20,10 @@ export const GET_TOKEN_TXS_SUCCESS = "GET_TOKEN_TXS_SUCCESS";
 export const GET_TOKEN_TXS_FAILED = "GET_TOKEN_TXS_FAILED";
 export const GET_OWNED_TOKENS_REQUEST = "GET_OWNED_TOKENS_REQUEST";
 export const GET_OWNED_TOKENS_SUCCESS = "GET_OWNED_TOKENS_SUCCESS";
-export const GET_OWNED_TOKENS_FAILED = "GET_TOKEN_TXS_FAILED";
+export const GET_OWNED_TOKENS_FAILED = "GET_OWNED_TOKENS_FAILED";
+export const GET_CONTRACT_REQUEST = "GET_CONTRACT_REQUEST";
+export const GET_CONTRACT_SUCCESS = "GET_CONTRACT_SUCCESS";
+export const GET_CONTRACT_FAILED = "GET_CONTRACT_FAILED";
 
 export const getAddress = (payload: any) => ({
   type: GET_ADDRESS_REQUEST,
@@ -119,5 +124,22 @@ export const getOwnedTokensSuccess = (data: any) => {
 
 export const getOwnedTokensFailed = (error: any) => ({
   type: GET_OWNED_TOKENS_FAILED,
+  error,
+});
+
+export const getContract = (payload: any) => ({
+  type: GET_CONTRACT_REQUEST,
+  payload,
+});
+
+export const getContractSuccess = (data: Contract) => {
+  return {
+    type: GET_CONTRACT_SUCCESS,
+    data,
+  };
+};
+
+export const getContractFailed = (error: any) => ({
+  type: GET_CONTRACT_FAILED,
   error,
 });

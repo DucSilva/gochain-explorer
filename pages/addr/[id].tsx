@@ -89,7 +89,7 @@ const Address = () => {
       title: "Contract Source",
       description: "",
       eventKey: "contract_source",
-      renderTab: () => <ContractSource addr={addr} />,
+      renderTab: () => <ContractSource addrHash={queryId} />,
       isRender: addr?.contract,
     },
   ];
