@@ -1,18 +1,24 @@
 import AppLayout from "@Components/Layout/AppLayout";
 import Head from "next/head";
+import Link from "next/link";
 import React from "react";
 import { YY_MM_DD_HH_mm_ss } from "@Utils/constants";
 import moment from "moment";
 import { request } from "@Pages/api/handler";
 import styles from "@Styles/Home.module.css";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 const BlockDetail = () => {
   const [queryId, $queryId] = React.useState<any | null>("");
-  const [block, setBlock] = React.useState<any | null>({});
+  const [signers, setSigners] = React.useState<any | null>("");
+  const [blockDetail, setBlockDetail] = React.useState<any | null>({});
   const [transactions, setTransactions] = React.useState<any | null>([]);
   const router = useRouter();
+
+  React.useEffect(() => {
+    let signerList = JSON.parse(localStorage.getItem("signers") || "{}");
+    if (signerList) setSigners(signerList);
+  }, []);
 
   React.useEffect(() => {
     const { query } = router;
@@ -30,7 +36,15 @@ const BlockDetail = () => {
   };
 
   React.useEffect(() => {
-    getDetailBlock().then((res) => setBlock(res?.data));
+    getDetailBlock().then((res) => {
+      let block = res?.data;
+      block.signerDetails = signers[block?.miner.toLowerCase()] || null;
+      if (block?.extra && block?.extra?.candidate) {
+        block.extra.signerDetails =
+          signers[block?.extra?.candidate.toLowerCase()] || null;
+      }
+      setBlockDetail(block);
+    });
   }, [queryId]);
 
   const getBlockTransaction = async () => {
@@ -60,39 +74,43 @@ const BlockDetail = () => {
               </div>
               <dl>
                 <dt>Block Number</dt>
-                <dd>{block?.number}</dd>
+                <dd>{blockDetail?.number}</dd>
                 <dt>Block Hash</dt>
-                <dd>{block?.hash}</dd>
+                <dd>{blockDetail?.hash}</dd>
                 <dt>Created At</dt>
                 <dd>
-                  {block?.created_at &&
-                    moment(block?.created_at).format(YY_MM_DD_HH_mm_ss)}{" "}
+                  {blockDetail?.created_at &&
+                    moment(blockDetail?.created_at).format(
+                      YY_MM_DD_HH_mm_ss
+                    )}{" "}
                   (
-                  {block?.created_at && moment(block?.created_at).fromNow(true)}{" "}
+                  {blockDetail?.created_at &&
+                    moment(blockDetail?.created_at).fromNow(true)}{" "}
                   ago )
                 </dd>
                 <dt>Parent block hash</dt>
                 <dd>
-                  <Link href={`/block/${block?.parent_hash}`}>
-                    <a>{block?.parent_hash}</a>
+                  <Link href={`/block/${blockDetail?.parent_hash}`}>
+                    <a>{blockDetail?.parent_hash}</a>
                   </Link>
                 </dd>
                 <dt>Signer</dt>
                 <dd>
-                  <Link href={`/addr/${block?.miner}`}>
-                    <a>{block?.miner}</a>
+                  <Link href={`/addr/${blockDetail?.miner}`}>
+                    <a>{blockDetail?.miner}</a>
                   </Link>{" "}
-                  {block?.extra && (
+                  {blockDetail?.extra && (
                     <>
                       (
                       <a
                         href={
-                          block?.signerDetails?.url || "https://gochain.io/"
+                          blockDetail?.signerDetails?.url ||
+                          "https://gochain.io/"
                         }
                         target="_blank"
                         rel="noreferrer"
                       >
-                        {block?.extra?.vanity}
+                        {blockDetail?.extra?.vanity}
                       </a>
                       )
                     </>
@@ -100,17 +118,17 @@ const BlockDetail = () => {
                 </dd>
                 <dt>Gas Limit</dt>
                 {/* <dd>{{block.gas_limit | bigNumber}}</dd> */}
-                <dd>{block?.gas_limit}</dd>
+                <dd>{blockDetail?.gas_limit}</dd>
                 <dt>Gas Used</dt>
                 {/* <dd>{{block.gas_used | bigNumber}}</dd> */}
-                <dd>{block?.gas_used}</dd>
+                <dd>{blockDetail?.gas_used}</dd>
                 {/* <ng-container *ngIf="block.gas_fees"> */}
-                {block?.gas_fees && (
+                {blockDetail?.gas_fees && (
                   <>
                     <dt>Gas Fees</dt>
                     <dd>
-                      {/* {{block.gas_fees | weiToGO | bigNumber}} */}
-                      {block?.gas_fees}
+                      {/* {{blockDetail.gas_fees | weiToGO | bigNumber}} */}
+                      {blockDetail?.gas_fees}
                       {/* <ng-container *ngIf="block.total_fees_burned" popover-title="block.total_fees_burned | weiToGO | bigNumber"> */}
                       (<img src="/assets/icons/fire.svg" /> burned)
                     </dd>
@@ -118,29 +136,31 @@ const BlockDetail = () => {
                 )}
 
                 <dt>Transactions Count</dt>
-                <dd>{block?.tx_count}</dd>
+                <dd>{blockDetail?.tx_count}</dd>
                 <dt>Difficulty</dt>
-                <dd>{block?.difficulty}</dd>
+                <dd>{blockDetail?.difficulty}</dd>
                 <dt>Extra Data</dt>
-                <dd>{block?.extra?.vanity}</dd>
-                {block?.extra?.has_vote && (
+                <dd>{blockDetail?.extra?.vanity}</dd>
+                {blockDetail?.extra?.has_vote && (
                   <>
                     <dt>Vote</dt>
                     <dd>
-                      {block?.extra?.auth ? "Add" : "Remove"}{" "}
-                      {block?.extra?.is_voter_election ? "voter" : "signer"}
-                      <Link href={`/addr/${block.extra.candidate}`}>
-                        <a>{block?.extra?.candidate}</a>
+                      {blockDetail?.extra?.auth ? "Add" : "Remove"}{" "}
+                      {blockDetail?.extra?.is_voter_election
+                        ? "voter"
+                        : "signer"}
+                      <Link href={`/addr/${blockDetail.extra.candidate}`}>
+                        <a>{blockDetail?.extra?.candidate}</a>
                       </Link>
-                      {block?.extra?.signerDetails && (
+                      {blockDetail?.extra?.signerDetails && (
                         <>
                           (
                           <a
-                            href={block.extra.signerDetails.url}
+                            href={blockDetail.extra.signerDetails.url}
                             target="_blank"
                             rel="noreferrer"
                           >
-                            {block?.extra?.signerDetails?.name}
+                            {blockDetail?.extra?.signerDetails?.name}
                           </a>
                           )
                         </>

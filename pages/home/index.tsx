@@ -1,15 +1,26 @@
 import AppLayout from "@Components/Layout/AppLayout";
 import Head from "next/head";
-import Loading from "@Components/Loading";
 import type { NextPage } from "next";
 import React from "react";
 import RecentBlock from "@Components/RecentBlock";
 import SupplyStats from "@Components/SupplyStats";
 import Toasts from "@Components/Toasts";
 import Transactions from "@Components/Transactions";
+import { request } from "@Pages/api/handler";
 import styles from "@Styles/Home.module.css";
 
 const Home: NextPage = () => {
+  const getSignerList = async () => {
+    const result = await request.getSignerList();
+    return result;
+  };
+
+  React.useEffect(() => {
+    getSignerList().then((res: any) => {
+      localStorage.setItem("signers", JSON.stringify(res?.data));
+    });
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -20,16 +31,16 @@ const Home: NextPage = () => {
 
       <AppLayout>
         <div className="container py-4">
-              <Toasts />
-              <div className="row align-items-stretch">
-                <div className="col-lg-6 col-xs-12">
-                  <SupplyStats />
-                </div>
-                <div className="col-lg-6 col-xs-12 mt-4 mt-lg-0">
-                  <Transactions />
-                </div>
-              </div>
-              <RecentBlock />
+          <Toasts />
+          <div className="row align-items-stretch">
+            <div className="col-lg-6 col-xs-12">
+              <SupplyStats />
+            </div>
+            <div className="col-lg-6 col-xs-12 mt-4 mt-lg-0">
+              <Transactions />
+            </div>
+          </div>
+          <RecentBlock />
         </div>
       </AppLayout>
     </div>

@@ -69,4 +69,7 @@ export const request = {
   getContract(addrHash: string) {
     return ins.get("/address/" + addrHash + "/contract");
   },
+  getSignerList() {
+    return ins.get("/signers/list");
+  },
 };
