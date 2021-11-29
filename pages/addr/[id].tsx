@@ -75,7 +75,7 @@ const Address = () => {
       title: "Tokens Held",
       description: "Balance of tokens held by this account.",
       eventKey: "owned_tokens",
-      renderTab: () => <OwnedToken addr={addr} />,
+      renderTab: () => <OwnedToken addrHash={queryId} />,
       isRender: !addr?.contract,
     },
     {

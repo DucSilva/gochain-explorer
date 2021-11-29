@@ -10,6 +10,9 @@ import {
   GET_ADDRESS_TRANSACTIONS_FAILED,
   GET_ADDRESS_TRANSACTIONS_REQUEST,
   GET_ADDRESS_TRANSACTIONS_SUCCESS,
+  GET_OWNED_TOKENS_FAILED,
+  GET_OWNED_TOKENS_REQUEST,
+  GET_OWNED_TOKENS_SUCCESS,
   GET_TOKEN_HOLDERS_FAILED,
   GET_TOKEN_HOLDERS_REQUEST,
   GET_TOKEN_HOLDERS_SUCCESS,
@@ -27,6 +30,7 @@ const initialState = {
   internal_transactions: [],
   token_holders: [],
   token_transactions: [],
+  owned_tokens: [],
 };
 
 const addressReducer = (state = initialState, action: any) => {
@@ -163,6 +167,34 @@ const addressReducer = (state = initialState, action: any) => {
     }
 
     case GET_TOKEN_TXS_FAILED: {
+      const { error } = action;
+      return {
+        ...state,
+        // isLoading: false,
+        error,
+      };
+    }
+
+    case GET_OWNED_TOKENS_REQUEST: {
+      const { payload } = action;
+      return {
+        ...state,
+        // isLoading: true,
+        payload,
+      };
+    }
+
+    case GET_OWNED_TOKENS_SUCCESS: {
+      const { owned_tokens } = action?.data;
+
+      return {
+        ...state,
+        // isLoading: false,
+        owned_tokens,
+      };
+    }
+
+    case GET_OWNED_TOKENS_FAILED: {
       const { error } = action;
       return {
         ...state,

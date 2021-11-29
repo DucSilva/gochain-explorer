@@ -16,6 +16,9 @@ export const GET_TOKEN_HOLDERS_FAILED = "GET_TOKEN_HOLDERS_FAILED";
 export const GET_TOKEN_TXS_REQUEST = "GET_TOKEN_TXS_REQUEST";
 export const GET_TOKEN_TXS_SUCCESS = "GET_TOKEN_TXS_SUCCESS";
 export const GET_TOKEN_TXS_FAILED = "GET_TOKEN_TXS_FAILED";
+export const GET_OWNED_TOKENS_REQUEST = "GET_OWNED_TOKENS_REQUEST";
+export const GET_OWNED_TOKENS_SUCCESS = "GET_OWNED_TOKENS_SUCCESS";
+export const GET_OWNED_TOKENS_FAILED = "GET_TOKEN_TXS_FAILED";
 
 export const getAddress = (payload: any) => ({
   type: GET_ADDRESS_REQUEST,
@@ -86,18 +89,35 @@ export const getAddressHolderFailed = (error: any) => ({
 });
 
 export const getAddressTokenTXS = (payload: any) => ({
-  type: GET_TOKEN_HOLDERS_REQUEST,
+  type: GET_TOKEN_TXS_REQUEST,
   payload,
 });
 
 export const getAddressTokenTXSSuccess = (data: any) => {
   return {
-    type: GET_TOKEN_HOLDERS_SUCCESS,
+    type: GET_TOKEN_TXS_SUCCESS,
     data,
   };
 };
 
 export const getAddressTokenTXSFailed = (error: any) => ({
   type: GET_TOKEN_TXS_FAILED,
+  error,
+});
+
+export const getOwnedTokens = (payload: any) => ({
+  type: GET_OWNED_TOKENS_REQUEST,
+  payload,
+});
+
+export const getOwnedTokensSuccess = (data: any) => {
+  return {
+    type: GET_OWNED_TOKENS_SUCCESS,
+    data,
+  };
+};
+
+export const getOwnedTokensFailed = (error: any) => ({
+  type: GET_OWNED_TOKENS_FAILED,
   error,
 });

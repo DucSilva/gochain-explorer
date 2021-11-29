@@ -61,4 +61,9 @@ export const request = {
       params: data,
     });
   },
+  getOwnedTokens(addrHash: string, data?: any) {
+    return ins.get("/address/" + addrHash + "/owned_tokens", {
+      params: data,
+    });
+  },
 };
