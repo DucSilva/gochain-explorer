@@ -7,7 +7,7 @@ import { getAddressInternal } from "@Redux/actions/address/index";
 import moment from "moment";
 
 const ContractSource = (addrHash: any) => {
-  const { contract, addr } = useSelector((state) => state?.address) || [];
+  const { contract, addr } = useSelector((state: any) => state?.address) || [];
   const dispatch = useDispatch();
 
   React.useEffect(() => {

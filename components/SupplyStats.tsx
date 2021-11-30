@@ -5,7 +5,7 @@ import { getSupplyStats } from '@Redux/actions/home/index';
 
 const SupplyStats = () => {
   const dispatch = useDispatch();
-  const { supplyStats } = useSelector(state => state?.home) || {}
+  const { supplyStats } = useSelector((state: any) => state?.home) || {}
 
   React.useEffect(() => {
     dispatch(getSupplyStats({}))

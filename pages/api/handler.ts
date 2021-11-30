@@ -72,4 +72,7 @@ export const request = {
   getSignerList() {
     return ins.get("/signers/list");
   },
+  getSignerStats() {
+    return ins.get("/signers/stats");
+  },
 };

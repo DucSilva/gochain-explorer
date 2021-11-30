@@ -8,7 +8,7 @@ import { getOwnedTokens } from "@Redux/actions/address/index";
 import moment from "moment";
 
 const OwnedToken = (addrHash: any) => {
-  const { owned_tokens, addr } = useSelector((state) => state?.address) || [];
+  const { owned_tokens, addr } = useSelector((state: any) => state?.address) || [];
   const [currentPage, setCurrentPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(25);
 

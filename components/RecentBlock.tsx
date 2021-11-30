@@ -8,7 +8,7 @@ import moment from "moment";
 
 const RecentBlock = () => {
   const dispatch = useDispatch();
-  const { blocks: data } = useSelector((state) => state?.home) || {};
+  const { blocks: data } = useSelector((state: any) => state?.home) || {};
 
   React.useEffect(() => {
     dispatch(getBlock({}));

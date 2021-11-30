@@ -12,7 +12,7 @@ const Pagination = ({
   onPageChange,
   siblingCount = 5,
 }: any) => {
-  const paginationRange = usePagination({
+  const paginationRange: any = usePagination({
     currentPage,
     totalCount,
     siblingCount,
@@ -68,7 +68,7 @@ const Pagination = ({
                 <span aria-hidden="true">&laquo;</span>
               </span>
             </li>
-            {paginationRange?.map((pageNumber) => {
+            {paginationRange?.map((pageNumber: any) => {
               // If the pageItem is a DOT, render the DOTS unicode character
               if (pageNumber === DOTS) {
                 return <li className="page-item dots">&#8230;</li>;

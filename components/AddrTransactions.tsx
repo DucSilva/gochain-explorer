@@ -8,7 +8,7 @@ import { getAddressTransactions } from "@Redux/actions/address/index";
 import moment from "moment";
 
 const AddrTransactions = (addrHash: any) => {
-  const { transactions, addr } = useSelector((state) => state?.address) || [];
+  const { transactions, addr } = useSelector((state: any) => state?.address) || [];
   const [currentPage, setCurrentPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(25);
 

@@ -205,6 +205,7 @@ export function isHex(val: string): boolean {
  * @param desc
  */
 export function sortObjArrByKey(arr: any[], key: string, desc: boolean = true) {
+  console.log('arr', arr)
   if (desc) {
     arr.sort((a, b) => {
       if (a[key] > b[key]) return -1;

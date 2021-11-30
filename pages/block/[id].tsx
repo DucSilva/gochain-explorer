@@ -38,10 +38,12 @@ const BlockDetail = () => {
   React.useEffect(() => {
     getDetailBlock().then((res) => {
       let block = res?.data;
-      block.signerDetails = signers[block?.miner.toLowerCase()] || null;
-      if (block?.extra && block?.extra?.candidate) {
-        block.extra.signerDetails =
-          signers[block?.extra?.candidate.toLowerCase()] || null;
+      if (block?.miner) {
+        block.signerDetails = signers[block?.miner?.toLowerCase()] || null;
+        if (block?.extra && block?.extra?.candidate) {
+          block.extra.signerDetails =
+            signers[block?.extra?.candidate.toLowerCase()] || null;
+        }
       }
       setBlockDetail(block);
     });

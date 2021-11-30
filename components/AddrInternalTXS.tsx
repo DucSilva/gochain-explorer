@@ -9,7 +9,7 @@ import moment from "moment";
 
 const AddrInternalTXS = (addrHash: any) => {
   const { internal_transactions, addr } =
-    useSelector((state) => state?.address) || [];
+    useSelector((state: any) => state?.address) || [];
   const [currentPage, setCurrentPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(25);
 

@@ -6,7 +6,7 @@ import React from "react";
 import { getAddressHolder } from "@Redux/actions/address/index";
 
 const TokenHolders = (addrHash: any) => {
-  const { token_holders, addr } = useSelector((state) => state?.address) || [];
+  const { token_holders, addr } = useSelector((state: any) => state?.address) || [];
   const [currentPage, setCurrentPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(25);
 

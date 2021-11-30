@@ -22,7 +22,7 @@ import { useRouter } from "next/router";
 
 const Address = () => {
   const dispatch = useDispatch();
-  const { addr, isLoading } = useSelector((state) => state.address) || {};
+  const { addr, isLoading } = useSelector((state: any) => state.address) || {};
   const [queryId, $queryId] = React.useState<any | null>("");
   const router = useRouter();
 
@@ -47,6 +47,7 @@ const Address = () => {
       eventKey: "transactions",
       renderTab: () => <AddrTransactions addrHash={queryId} />,
       isRender: true,
+      isShowDes: true,
     },
     {
       title: `${addr?.token_symbol || "Internal"} Transfers`,
@@ -54,6 +55,7 @@ const Address = () => {
       eventKey: "internal_transactions",
       renderTab: () => <AddrInternalTXS addrHash={queryId} />,
       isRender: addr?.contract,
+      isShowDes: true,
     },
     {
       title: `${addr?.token_symbol ? addr?.token_symbol + " " : ""} Holders`,
@@ -63,6 +65,7 @@ const Address = () => {
       eventKey: "holders",
       renderTab: () => <TokenHolders addrHash={queryId} />,
       isRender: addr?.contract,
+      isShowDes: true,
     },
     {
       title: "Token Transfers",
@@ -70,6 +73,7 @@ const Address = () => {
       eventKey: "token_transactions",
       renderTab: () => <TokenTXS addrHash={queryId} />,
       isRender: true,
+      isShowDes: true,
     },
     {
       title: "Tokens Held",
@@ -77,6 +81,7 @@ const Address = () => {
       eventKey: "owned_tokens",
       renderTab: () => <OwnedToken addrHash={queryId} />,
       isRender: !addr?.contract,
+      isShowDes: true,
     },
     {
       title: "Interact",
@@ -84,6 +89,7 @@ const Address = () => {
       eventKey: "interact",
       renderTab: () => <Interactor addr={addr} addrHash={queryId} />,
       isRender: addr?.contract,
+      isShowDes: true,
     },
     {
       title: "Contract Source",
@@ -91,6 +97,7 @@ const Address = () => {
       eventKey: "contract_source",
       renderTab: () => <ContractSource addrHash={queryId} />,
       isRender: addr?.contract,
+      isShowDes: true,
     },
   ];
 

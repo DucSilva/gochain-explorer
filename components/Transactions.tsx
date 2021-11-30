@@ -5,7 +5,7 @@ import { getStats } from "@Redux/actions/home/index";
 
 const Transactions = () => {
   const dispatch = useDispatch();
-  const { stats } = useSelector((state) => state?.home) || {};
+  const { stats } = useSelector((state: any) => state?.home) || {};
   const { total_transactions_count, last_day_transactions_count, last_week_transactions_count } = stats;
 
   React.useEffect(() => {
