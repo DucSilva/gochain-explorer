@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 import Toast from "react-bootstrap/Toast";
 import ToastContainer from "react-bootstrap/ToastContainer";
-import { searchContract } from "@Redux/actions/home/index";
+import { toastInformation } from "@Redux/actions/home";
 
 const Toasts = () => {
   const dispatch = useDispatch();
-  const { show, message } = useSelector((state) => state.home) || {};
+  const { show, message, status } = useSelector((state: any) => state?.home) || {};
 
   return (
     <div className="container">
@@ -18,14 +18,14 @@ const Toasts = () => {
       >
         <Toast
           show={show}
-          onClose={() => dispatch(searchContract({ show: false, content: "" }))}
+          onClose={() => dispatch(toastInformation({ show: false, content: "" }))}
           delay={10000}
           autohide
-          className="alert alert-warning"
+          className={`alert alert-${status}`}
         >
-          <Toast.Header className="alert-warning">
+          <Toast.Header className={`alert-${status}`}>
             <strong className="me-auto" style={{ fontSize: 13 }}>
-              {message && message.toUpperCase()}
+              {message && message?.toUpperCase()}
             </strong>
           </Toast.Header>
         </Toast>

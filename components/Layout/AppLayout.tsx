@@ -1,5 +1,3 @@
-// import Footer from "../Partials/Footer";
-
 import Navbar from "@Components/Partials/Navbar";
 import React from "react";
 import Toasts from "@Components/Toasts";

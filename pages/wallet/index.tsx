@@ -1,10 +1,54 @@
+import { useDispatch, useSelector } from "react-redux";
+
 import AppLayout from "@Components/Layout/AppLayout";
 import Head from "next/head";
-import Image from "next/image";
+import Link from "next/link";
 import type { NextPage } from "next";
+import React from "react";
+import { openWallet } from "@Redux/actions/wallet";
 import styles from "@Styles/Home.module.css";
+import { useRouter } from "next/router";
 
 const Wallet: NextPage = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { isProcessing } = useSelector((state: any) => state.wallet) || {};
+
+  const [passwordField, $passwordField] = React.useState<any | null>({
+    type: "password",
+    icon: "eye-off.svg",
+    alt: "show",
+  });
+  const [toggle, setToggle] = React.useState(false);
+
+  const onPrivateKeySubmit = (e: any) => {
+    e.preventDefault();
+    const privateKey: string = e.target["privateKey"].value;
+    if (privateKey) {
+      dispatch(openWallet({ privateKey, router }));
+    }
+  };
+
+  const toggleShowHide = () => {
+    setToggle((pToggle: boolean) => !pToggle);
+  };
+
+  React.useEffect(() => {
+    if (toggle) {
+      $passwordField({
+        type: "text",
+        icon: "eye.svg",
+        alt: "hide",
+      });
+    } else {
+      $passwordField({
+        type: "password",
+        icon: "eye-off.svg",
+        alt: "show",
+      });
+    }
+  }, [toggle]);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -19,34 +63,33 @@ const Wallet: NextPage = () => {
             <div className="card-body">
               <div className="row justify-content-center h-100 mt-5">
                 <div className="col-md-6">
-                  <h4 className="text-center text-primary text-uppercase">
+                  <h4 className="text-center text-primary text-uppercase w-max-content">
                     Please enter your private key to proceed
                   </h4>
                   <form
                     className="mt-4"
-                    // [formGroup]="privateKeyForm"
-                    // (submit)="onPrivateKeySubmit()"
+                    onSubmit={(e) => onPrivateKeySubmit(e)}
                   >
                     <div className="input-group">
                       <input
-                        // [type]="passwordField.type"
+                        type={passwordField.type}
                         className="form-control"
                         placeholder="Private Key"
-                        formControlName="privateKey"
+                        name="privateKey"
                         autoFocus
                         required
-                        // [readOnly]="walletService.isProcessing"
+                        readOnly={isProcessing}
                       />
                       <div className="input-group-append">
                         <button
                           className="btn btn-outline-secondary"
                           type="button"
-                          // (click)="passwordField.toggle()"
+                          onClick={() => toggleShowHide()}
                         >
                           <img
-                            src="/assets/icons/{{passwordField.icon}}"
+                            src={`/assets/icons/${passwordField.icon}`}
                             height="14px"
-                            // [alt]="passwordField.alt"
+                            alt={passwordField.alt}
                           />
                         </button>
                       </div>
@@ -54,26 +97,28 @@ const Wallet: NextPage = () => {
                     <button
                       type="submit"
                       className="btn btn-primary btn-block mt-4"
-                      // [disabled]="walletService.isProcessing"
+                      disabled={isProcessing}
                     >
-                      {/* <ng-container *ngIf="walletService.isProcessing; else open"> */}
-                      OPENING{" "}
-                      <img src="/assets/icons/loader.svg" alt="Opening" />
-                      {/* </ng-container> */}
-                      {/* <ng-template #open> */}
-                      OPEN WALLET
-                      {/* </ng-template> */}
+                      {isProcessing ? (
+                        <>
+                          OPENING{" "}
+                          <img src="/assets/icons/loader.svg" alt="Opening" />
+                        </>
+                      ) : (
+                        <>OPEN WALLET</>
+                      )}
                     </button>
                   </form>
                   <div className="row mt-4">
                     <div className="col-12">
                       <button
-                        // routerLink="create"
                         type="button"
                         className="btn btn-outline-primary btn-block"
-                        // [disabled]="walletService.isProcessing"
+                        disabled={isProcessing}
                       >
-                        <a href="/wallet/create">Create Account</a>
+                        <Link href="/wallet/create">
+                          <a>Create Account</a>
+                        </Link>
                       </button>
                     </div>
                   </div>

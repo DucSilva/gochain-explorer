@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import type { NextPage } from "next";
 import { ROUTES } from "@Utils/constants";
 import { request } from "@Pages/api/handler";
-import { searchContract } from "@Redux/actions/home/index";
+import { toastInformation } from "@Redux/actions/home";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 
@@ -28,9 +28,10 @@ const Search: NextPage = () => {
             .then((res) => router.push(`/${ROUTES.TRANSACTION}/${valueS}`))
             .catch((error) => {
               dispatch(
-                searchContract({
+                toastInformation({
                   show: true,
                   content: "the data you entered is not valid",
+                  status: 'warning',
                 })
               );
             });
@@ -39,9 +40,10 @@ const Search: NextPage = () => {
       await router.push(`/${ROUTES.BLOCK}/${valueS}`);
     } else {
       dispatch(
-        searchContract({
+        toastInformation({
           show: true,
           content: "the data you entered is not valid",
+          status: 'warning',
         })
       );
       return;

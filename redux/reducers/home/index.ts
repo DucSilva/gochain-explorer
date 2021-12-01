@@ -10,7 +10,7 @@ import {
   GET_SUPPLY_STATS_FAILED,
   GET_SUPPLY_STATS_REQUEST,
   GET_SUPPLY_STATS_SUCCESS,
-  SEARCH_VALUE,
+  TOAST_INFORMATION,
 } from "@Redux/actions/home/index";
 
 const initialState = {
@@ -20,6 +20,7 @@ const initialState = {
   blocks: {},
   error: {},
   show: false,
+  status: '',
 };
 
 const homeReducer = (state = initialState, action: any) => {
@@ -105,12 +106,13 @@ const homeReducer = (state = initialState, action: any) => {
       };
     }
 
-    case SEARCH_VALUE: {
-      const { show, content } = action?.payload;
+    case TOAST_INFORMATION: {
+      const { show, content, status } = action?.payload;
       return {
         ...state,
         show,
         message: content,
+        status
       };
     }
 

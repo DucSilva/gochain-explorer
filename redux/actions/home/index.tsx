@@ -7,7 +7,7 @@ export const GET_STATS_FAILED = "GET_STATS_FAILED";
 export const GET_BLOCK_REQUEST = "GET_BLOCK_REQUEST";
 export const GET_BLOCK_SUCCESS = "GET_BLOCK_SUCCESS";
 export const GET_BLOCK_FAILED = "GET_BLOCK_FAILED";
-export const SEARCH_VALUE = "SEARCH_VALUE";
+export const TOAST_INFORMATION = "TOAST_INFORMATION";
 
 export const getSupplyStats = (payload: any) => ({
   type: GET_SUPPLY_STATS_REQUEST,
@@ -60,7 +60,7 @@ export const getBlockFailed = (error: any) => ({
   error,
 });
 
-export const searchContract = (payload: any) => ({
-  type: SEARCH_VALUE,
+export const toastInformation = (payload: any) => ({
+  type: TOAST_INFORMATION,
   payload,
 });
