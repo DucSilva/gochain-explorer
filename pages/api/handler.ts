@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import Axios from "axios";
-import Web3  from 'web3';
+import Web3 from "web3";
 
 const ins = Axios.create({
   baseURL: "https://testnet-explorer.gochain.io/api",
@@ -78,10 +78,13 @@ export const request = {
   getSignerStats() {
     return ins.get("/signers/stats");
   },
-  getAccountWallet(privateKey: string){
-    return web3.accounts.privateKeyToAccount(privateKey)
+  getAccountWallet(privateKey: string) {
+    return web3.accounts.privateKeyToAccount(privateKey);
   },
-  getBalance(address: string){
-    return web3.getBalance(address)
-  }
+  getBalance(address: string) {
+    return web3.getBalance(address);
+  },
+  createAccount() {
+    return web3.accounts.create();
+  },
 };

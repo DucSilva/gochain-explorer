@@ -1,10 +1,39 @@
+import { createAccount, openWallet } from "@Redux/actions/wallet";
+import { useDispatch, useSelector } from "react-redux";
+
 import AppLayout from "@Components/Layout/AppLayout";
 import Head from "next/head";
-import Image from "next/image";
+import InputFieldForm from "@Components/Partials/InputField";
 import type { NextPage } from "next";
+import React from "react";
 import styles from "@Styles/Home.module.css";
+import { toastInformation } from "@Redux/actions/home";
+import { useRouter } from 'next/router';
 
 const CreateWallet: NextPage = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { account } = useSelector((state: any) => state.wallet);
+
+  React.useEffect(() => {
+    dispatch(createAccount({}));
+  }, []);
+
+  const handleCopy = (content: string) => {
+    dispatch(
+      toastInformation({
+        show: true,
+        content: "copied",
+        status: "success",
+      })
+    );
+    navigator.clipboard.writeText(content);
+  };
+
+  const openAccountWallet = (privateKey: string) => {
+    dispatch(openWallet({ privateKey, router }));
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -14,64 +43,111 @@ const CreateWallet: NextPage = () => {
       </Head>
 
       <AppLayout>
-        <main className={styles.main}>
-          <h1 className={styles.title}>
-            Welcome to <a href="https://nextjs.org">Next.js!</a>
-          </h1>
-
-          <p className={styles.description}>
-            Get started by editing{" "}
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
-
-          <div className={styles.grid}>
-            <a href="https://nextjs.org/docs" className={styles.card}>
-              <h2>Documentation &rarr;</h2>
-              <p>Find in-depth information about Next.js features and API.</p>
-            </a>
-
-            <a href="https://nextjs.org/learn" className={styles.card}>
-              <h2>Learn &rarr;</h2>
-              <p>Learn about Next.js in an interactive course with quizzes!</p>
-            </a>
-
-            <a
-              href="https://github.com/vercel/next.js/tree/master/examples"
-              className={styles.card}
-            >
-              <h2>Examples &rarr;</h2>
-              <p>Discover and deploy boilerplate example Next.js projects.</p>
-            </a>
-
-            <a
-              href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              className={styles.card}
-            >
-              <h2>Deploy &rarr;</h2>
-              <p>
-                Instantly deploy your Next.js site to a public URL with Vercel.
-              </p>
-            </a>
+        <div className="container">
+          <div className="card">
+            <div className="card-body">
+              <div className="card-title">
+                <img src="../../../assets/icons/user.svg" /> Create Account
+              </div>
+              {account ? (
+                <>
+                  <div className="callout callout-danger my-4">
+                    <p>
+                      NOTE: Once you leave this page, you cannot recover the
+                      address or private key.
+                    </p>
+                    <p>Please copy this somewhere safe!</p>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-9">
+                      <div className="form-group">
+                        <label htmlFor="private-key">Private key</label>
+                        <InputFieldForm
+                          placeholder="Private Key"
+                          name="privateKey"
+                          isProcessing={true}
+                          className=""
+                          value={account?.privateKey}
+                          renderFooter={() => {
+                            return (
+                              <button
+                                className="btn"
+                                type="button"
+                                onClick={() => handleCopy(account?.privateKey)}
+                                title="Copy to clipboard"
+                              >
+                                <img
+                                  src="../../../assets/icons/copy.svg"
+                                  alt="Copy"
+                                  height="16px"
+                                />
+                              </button>
+                            );
+                          }}
+                        />
+                      </div>
+                      <div className="form-group input-group">
+                        <label htmlFor="address">Address</label>
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control"
+                            name="address"
+                            value={account?.address}
+                            readOnly
+                          />
+                          <div className="input-group-append">
+                            <button
+                              className="btn"
+                              type="button"
+                              onClick={() => handleCopy(account?.address)}
+                              title="Copy to clipboard"
+                            >
+                              <img
+                                src="../../../assets/icons/copy.svg"
+                                alt="Copy"
+                                height="16px"
+                              />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3 text-right">
+                      <a
+                        href={`https://testnet-explorer.gochain.io/api/address/${account?.address}/qr`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <img
+                          className="img-thumbnail"
+                          src={`https://testnet-explorer.gochain.io/api/address/${account?.address}/qr`}
+                          alt={account?.address}
+                          height="150"
+                          width="150"
+                        />
+                      </a>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary mr-1"
+                  >
+                    Back
+                  </button>
+                  <button type="button" className="btn btn-primary" onClick={() => openAccountWallet(account?.privateKey)}>Use wallet</button>
+                </>
+              ) : (
+                <div className="callout callout-danger mb-4">
+                  <h4>
+                    An error occurred while processing request. Please try again
+                    later.
+                  </h4>
+                </div>
+              )}
+            </div>
           </div>
-        </main>
-
-        <footer className={styles.footer}>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Powered by{" "}
-            <span className={styles.logo}>
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                width={72}
-                height={16}
-              />
-            </span>
-          </a>
-        </footer>
+        </div>
       </AppLayout>
     </div>
   );

@@ -25,7 +25,6 @@ import {
 } from "@Redux/actions/address";
 import { all, put, takeLatest } from "redux-saga/effects";
 
-import { Contract } from "@Models/contract.model";
 import { request } from "@Pages/api/handler";
 
 const call: any = Effects.call;
@@ -33,7 +32,11 @@ const call: any = Effects.call;
 function* getAddressContract({ payload }: any) {
   const { addrHash } = payload || "";
   try {
-    const { data } = yield call(request.getAddress, addrHash);
+    let { data } = yield call(request.getAddress, addrHash);
+
+    let signers = JSON.parse(localStorage.getItem("signers") || "{}");
+    data.signerDetails = signers[data?.address?.toLowerCase()] || null;
+
     yield put(getAddressSuccess(data));
   } catch (error) {
     yield put(getAddressFailed(error));
@@ -137,14 +140,18 @@ function* getOwnedTokens({ payload }: any) {
   };
 
   try {
-    if (addrHash?.addrHash) {
-      const { data } = yield call(
-        request.getOwnedTokens,
-        addrHash?.addrHash,
-        _data
-      );
-
-      yield put(getOwnedTokensSuccess(data));
+    if (addrHash) {
+      if (currentPage && pageSize) {
+        const { data } = yield call(
+          request.getOwnedTokens,
+          addrHash,
+          _data
+        );
+        yield put(getOwnedTokensSuccess(data));
+      } else {
+        const { data } = yield call(request.getOwnedTokens, addrHash);
+        yield put(getOwnedTokensSuccess(data));
+      }
     }
   } catch (error) {
     yield put(getOwnedTokensFailed(error));
@@ -156,10 +163,7 @@ function* getContracts({ payload }: any) {
 
   try {
     if (addrHash?.addrHash) {
-      const { data } = yield call(
-        request.getOwnedTokens,
-        addrHash?.addrHash,
-      );
+      const { data } = yield call(request.getOwnedTokens, addrHash?.addrHash);
 
       yield put(getContractSuccess(data));
     }

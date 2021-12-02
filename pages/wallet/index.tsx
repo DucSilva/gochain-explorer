@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import AppLayout from "@Components/Layout/AppLayout";
 import Head from "next/head";
+import InputFieldForm from "@Components/Partials/InputField";
 import Link from "next/link";
 import type { NextPage } from "next";
 import React from "react";
@@ -14,13 +15,6 @@ const Wallet: NextPage = () => {
   const dispatch = useDispatch();
   const { isProcessing } = useSelector((state: any) => state.wallet) || {};
 
-  const [passwordField, $passwordField] = React.useState<any | null>({
-    type: "password",
-    icon: "eye-off.svg",
-    alt: "show",
-  });
-  const [toggle, setToggle] = React.useState(false);
-
   const onPrivateKeySubmit = (e: any) => {
     e.preventDefault();
     const privateKey: string = e.target["privateKey"].value;
@@ -28,26 +22,6 @@ const Wallet: NextPage = () => {
       dispatch(openWallet({ privateKey, router }));
     }
   };
-
-  const toggleShowHide = () => {
-    setToggle((pToggle: boolean) => !pToggle);
-  };
-
-  React.useEffect(() => {
-    if (toggle) {
-      $passwordField({
-        type: "text",
-        icon: "eye.svg",
-        alt: "hide",
-      });
-    } else {
-      $passwordField({
-        type: "password",
-        icon: "eye-off.svg",
-        alt: "show",
-      });
-    }
-  }, [toggle]);
 
   return (
     <div className={styles.container}>
@@ -70,30 +44,12 @@ const Wallet: NextPage = () => {
                     className="mt-4"
                     onSubmit={(e) => onPrivateKeySubmit(e)}
                   >
-                    <div className="input-group">
-                      <input
-                        type={passwordField.type}
-                        className="form-control"
-                        placeholder="Private Key"
-                        name="privateKey"
-                        autoFocus
-                        required
-                        readOnly={isProcessing}
-                      />
-                      <div className="input-group-append">
-                        <button
-                          className="btn btn-outline-secondary"
-                          type="button"
-                          onClick={() => toggleShowHide()}
-                        >
-                          <img
-                            src={`/assets/icons/${passwordField.icon}`}
-                            height="14px"
-                            alt={passwordField.alt}
-                          />
-                        </button>
-                      </div>
-                    </div>
+                    <InputFieldForm
+                      placeholder="Private Key"
+                      name="privateKey"
+                      isProcessing={isProcessing}
+                      className=""
+                    />
                     <button
                       type="submit"
                       className="btn btn-primary btn-block mt-4"

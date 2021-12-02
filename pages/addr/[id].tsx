@@ -244,7 +244,7 @@ const Address = () => {
                         <img
                           className="img-thumbnail"
                           src={`https://testnet-explorer.gochain.io/api/address/${addr?.address}/qr`}
-                          alt="{{addr.address}}"
+                          alt={addr?.address}
                         />
                       </a>
                     </div>

@@ -7,8 +7,10 @@ import { YY_MM_DD_HH_mm_ss } from "@Utils/constants";
 import { getOwnedTokens } from "@Redux/actions/address/index";
 import moment from "moment";
 
-const OwnedToken = (addrHash: any) => {
-  const { owned_tokens, addr } = useSelector((state: any) => state?.address) || [];
+const OwnedToken = (props: any) => {
+  const { addrHash = "", showPagination = true} = props;
+  const { owned_tokens, addr } =
+    useSelector((state: any) => state?.address) || [];
   const [currentPage, setCurrentPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(25);
 
@@ -16,7 +18,11 @@ const OwnedToken = (addrHash: any) => {
 
   React.useEffect(() => {
     if (addrHash) {
-      dispatch(getOwnedTokens({ addrHash, currentPage, pageSize }));
+      if(showPagination){
+        dispatch(getOwnedTokens({ addrHash, currentPage, pageSize }));
+      } else {
+        dispatch(getOwnedTokens({ addrHash }));
+      }
     }
   }, [currentPage, pageSize]);
 
@@ -60,13 +66,15 @@ const OwnedToken = (addrHash: any) => {
               })}
             </tbody>
           </table>
-          <Pagination
-            currentPage={currentPage}
-            totalCount={addr?.number_of_transactions || 0}
-            pageSize={pageSize}
-            onChangePageSize={(page: any) => setPageSize(page)}
-            onPageChange={(page: any) => setCurrentPage(page)}
-          />
+          {showPagination && (
+            <Pagination
+              currentPage={currentPage}
+              totalCount={addr?.number_of_transactions || 0}
+              pageSize={pageSize}
+              onChangePageSize={(page: any) => setPageSize(page)}
+              onPageChange={(page: any) => setCurrentPage(page)}
+            />
+          )}
         </>
       ) : (
         <div className="empty">No tokens</div>

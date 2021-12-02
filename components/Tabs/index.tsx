@@ -29,7 +29,7 @@ const renderTitle = (tab: any) => {
   );
 };
 
-function ControlledTabs({ tabs, isSigner = false }: any) {
+function ControlledTabs({ tabs, isSigner = false, disabled = false }: any) {
   const { statsData } = useSelector((state: any) => state.signer);
   const [key, setKey] = React.useState(
     !isSigner ? tabs[0]?.eventKey : statsData?.[0]?.range
@@ -49,6 +49,7 @@ function ControlledTabs({ tabs, isSigner = false }: any) {
                 eventKey={`${tab.eventKey}`}
                 title={renderTitle(tab)}
                 key={index}
+                disabled={disabled}
               >
                 {tab.renderTab()}
               </Tab>

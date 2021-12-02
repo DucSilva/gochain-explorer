@@ -19,7 +19,7 @@ const Toasts = () => {
         <Toast
           show={show}
           onClose={() => dispatch(toastInformation({ show: false, content: "" }))}
-          delay={10000}
+          delay={5000}
           autohide
           className={`alert alert-${status}`}
         >
