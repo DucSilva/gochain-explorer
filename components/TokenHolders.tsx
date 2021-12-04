@@ -1,3 +1,4 @@
+import { numberWithCommas, weiToGO } from "@Utils/functions";
 import { useDispatch, useSelector } from "react-redux";
 
 import Link from "next/link";
@@ -41,7 +42,7 @@ const TokenHolders = (addrHash: any) => {
                       </Link>
                     </td>
                     <td className="text-nowrap text-monospace text-right ws-p">
-                      {/* {{holder.balance | weiToGO: false : true : addr.decimals | bigNumber}} */}
+                      {weiToGO(holder?.balance, false, true, numberWithCommas(addr?.decimals))}
                       {holder?.balance}
                     </td>
                   </tr>

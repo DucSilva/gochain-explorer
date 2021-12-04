@@ -1,3 +1,4 @@
+import { numberWithCommas, weiToGO } from "@Utils/functions";
 import { useDispatch, useSelector } from "react-redux";
 
 import Link from "next/link";
@@ -95,7 +96,8 @@ const TokenTXS = (addrHash: any) => {
                       {tx?.address.token_symbol}
                     </td>
                     <td className="text-nowrap text-right ws-p text-monospace">
-                      {/* {addr.address === tx.to_address ? '+' : tx.value === 0 ? '' : '-'}} {{tx.value | weiToGO: false : true : tx.address.decimals | bigNumber} */}
+                      {addr?.address === tx?.to_address ? '+' : tx?.value === 0 ? '' : '-'}
+                      {weiToGO(tx?.value, false, true, numberWithCommas(tx?.address?.decimals))}
                       {addr?.address === tx?.to_address
                         ? "+"
                         : tx?.value === 0

@@ -13,6 +13,10 @@ export const CREATE_ACCOUNT_REQUEST = "CREATE_ACCOUNT_REQUEST";
 export const CREATE_ACCOUNT_SUCCESS = "CREATE_ACCOUNT_SUCCESS";
 export const CREATE_ACCOUNT_FAILED = "CREATE_ACCOUNT_FAILED";
 
+export const SEND_GO_REQUEST = "SEND_GO_REQUEST";
+export const SEND_GO_SUCCESS = "SEND_GO_SUCCESS";
+export const SEND_GO_FAILED = "SEND_GO_FAILED";
+
 export const openWallet = (payload: any) => ({
   type: OPEN_WALLET_REQUEST,
   payload,
@@ -76,5 +80,22 @@ export const createAccountSuccess = (data: any) => {
 
 export const createAccountFailed = (error: any) => ({
   type: CREATE_ACCOUNT_FAILED,
+  error,
+});
+
+export const sendGO = (payload: any) => ({
+  type: SEND_GO_REQUEST,
+  payload,
+});
+
+export const sendGOSuccess = (data: any) => {
+  return {
+    type: SEND_GO_SUCCESS,
+    data,
+  };
+};
+
+export const sendGOFailed = (error: any) => ({
+  type: SEND_GO_FAILED,
   error,
 });

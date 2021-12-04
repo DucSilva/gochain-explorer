@@ -1,3 +1,4 @@
+import { numberWithCommas, weiToGO } from "@Utils/functions";
 import { useDispatch, useSelector } from "react-redux";
 
 import Link from "next/link";
@@ -83,8 +84,12 @@ const AddrInternalTXS = (addrHash: any) => {
                       </Link>
                     </td>
                     <td className="text-nowrap text-right text-monospace ws-p">
-                      {/* {tx?.value | weiToGO: false : true : addr.decimals | bigNumber}  */}
-                      {tx?.value}
+                      {weiToGO(
+                        tx?.value,
+                        false,
+                        true,
+                        numberWithCommas(addr?.decimals)
+                      )}
                     </td>
                   </tr>
                 );

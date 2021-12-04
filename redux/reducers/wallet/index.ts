@@ -10,6 +10,9 @@ import {
   OPEN_WALLET_REQUEST,
   OPEN_WALLET_SUCCESS,
   RESET_PROCESSING,
+  SEND_GO_FAILED,
+  SEND_GO_REQUEST,
+  SEND_GO_SUCCESS,
   SET_ACCOUNT_BALANCE,
 } from "@Redux/actions/wallet";
 
@@ -92,6 +95,7 @@ const walletReducer = (state = initialState, action: any) => {
       return {
         ...state,
         isLoading: false,
+        isProcessing: false,
         account,
         accountBalance,
       };
@@ -127,6 +131,33 @@ const walletReducer = (state = initialState, action: any) => {
       return {
         ...state,
         error,
+      };
+    }
+
+    case SEND_GO_REQUEST: {
+      const { payload } = action;
+      return {
+        ...state,
+        payload,
+        isProcessing: true,
+      };
+    }
+
+    case SEND_GO_SUCCESS: {
+      const { data } = action;
+      return {
+        ...state,
+        // account: data,
+        isProcessing: false,
+      };
+    }
+
+    case SEND_GO_FAILED: {
+      const { error } = action;
+      return {
+        ...state,
+        error,
+        isProcessing: false,
       };
     }
 

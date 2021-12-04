@@ -147,7 +147,7 @@ export function convertWithDecimals(
   return value;
 }
 
-export function numberWithCommas(val: string): string {
+export function numberWithCommas(val: any): any {
   if (val == null) {
     return val;
   }
@@ -205,7 +205,7 @@ export function isHex(val: string): boolean {
  * @param desc
  */
 export function sortObjArrByKey(arr: any[], key: string, desc: boolean = true) {
-  console.log('arr', arr)
+  console.log("arr", arr);
   if (desc) {
     arr.sort((a, b) => {
       if (a[key] > b[key]) return -1;
@@ -233,3 +233,16 @@ export const range = (start: any, end: any) => {
   */
   return Array.from({ length }, (_, idx) => idx + start);
 };
+
+export function transform(val: string | number): string {
+  return convertWithDecimals(val, false, false, 18).split(".")[0];
+}
+
+export function weiToGO(
+  val: string | number,
+  showUnit: boolean = true,
+  removeTrailingZeros: boolean = false,
+  decimals: number = 18
+): string {
+  return convertWithDecimals(val, showUnit, removeTrailingZeros, decimals);
+}

@@ -26,8 +26,8 @@ const WalletAccount: NextPage = () => {
   const [queryId, $queryId] = React.useState<any | null>("");
   const router = useRouter();
   const { account, accountBalance, isLoading, isProcessing, receipt, addr } =
-  useSelector((state: any) => state.wallet) || {};
-  
+    useSelector((state: any) => state.wallet) || {};
+
   React.useEffect(() => {
     const { query } = router;
     if (query?.addrHash) {
@@ -71,7 +71,7 @@ const WalletAccount: NextPage = () => {
       title: "Send GO",
       eventKey: "send_go",
       renderTab: () => <Sender addrHash={queryId} />,
-      isRender: true,
+      isRender: !isProcessing,
       isShowDes: false,
     },
     {

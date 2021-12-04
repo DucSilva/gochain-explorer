@@ -1,19 +1,22 @@
+import { AbiItem, fromWei, isAddress, toWei } from "web3-utils";
+import { Account, TransactionConfig, TransactionReceipt } from "web3-core";
 import {
   CREATE_ACCOUNT_REQUEST,
   GET_WALLET_ADDR_REQUEST,
   OPEN_WALLET_REQUEST,
+  SEND_GO_REQUEST,
   createAccountFailed,
   createAccountSuccess,
   getWalletAddrFailed,
   getWalletAddrSuccess,
   openWalletFailed,
   openWalletSuccess,
+  sendGOFailed,
+  sendGOSuccess,
   setAccountBalance,
 } from "@Redux/actions/wallet";
-import { all, call, put, takeLatest } from "redux-saga/effects";
+import { all, call, delay, put, takeLatest } from "redux-saga/effects";
 
-import { Account } from "web3-core";
-import { Accounts } from "web3-eth-accounts";
 import { request } from "@Pages/api/handler";
 import { toastInformation } from "@Redux/actions/home";
 
@@ -25,9 +28,12 @@ function* openWallets({ payload }: any): any {
     }
     if (privateKey.length === 66) {
       let account = yield call(request.getAccountWallet, privateKey);
+      localStorage.setItem("account", JSON.stringify(account));
 
       if (account?.address) {
         let accountBalance = yield call(request.getBalance, account?.address);
+        fromWei(accountBalance, 'ether').toString();
+        console.log('accountBalance', accountBalance)
         if (accountBalance) {
           yield put(setAccountBalance(accountBalance));
 
@@ -84,10 +90,52 @@ function* getWalletAddress({ payload }: any) {
 function* createAccountRequest({ payload }: any) {
   try {
     let account: Account = yield call(request.createAccount);
+    localStorage.setItem("account", JSON.stringify(account));
 
     yield put(createAccountSuccess(account));
   } catch (error) {
     yield put(createAccountFailed(error));
+  }
+}
+
+function* sendGORequest({ payload }: any) {
+  console.log("payload", payload);
+  let { to, amount: value, gasLimit: gas, account } = payload?.payload;
+  console.log("account", account);
+  try {
+    if (to.length !== 42 || !isAddress(to)) {
+      yield put(
+        toastInformation({
+          show: true,
+          content: "ERROR: Invalid TO address.",
+          status: "danger",
+        })
+      );
+      return;
+    }
+
+    try {
+      value = toWei(value, "ether");
+    } catch (e) {
+      toastInformation({
+        show: true,
+        content: e,
+        status: "danger",
+      });
+      return;
+    }
+
+    const tx: TransactionConfig = {
+      to,
+      value,
+      gas,
+    };
+    yield delay(10000);
+    let receipt: TransactionReceipt = yield call(request.sendTx, tx, account);
+    console.log('receipt', receipt)
+    // yield put(sendGOSuccess(account));
+  } catch (error) {
+    yield put(sendGOFailed(error));
   }
 }
 
@@ -96,5 +144,6 @@ export function* walletSaga() {
     takeLatest(OPEN_WALLET_REQUEST, openWallets),
     takeLatest(GET_WALLET_ADDR_REQUEST, getWalletAddress),
     takeLatest(CREATE_ACCOUNT_REQUEST, createAccountRequest),
+    takeLatest(SEND_GO_REQUEST, sendGORequest),
   ]);
 }

@@ -1,3 +1,4 @@
+import { numberWithCommas, weiToGO } from "@Utils/functions";
 import { useDispatch, useSelector } from "react-redux";
 
 import AddrInternalTXS from "@Components/AddrInternalTXS";
@@ -142,7 +143,7 @@ const Address = () => {
                           )}
                         </dd>
                         <dt>Balance:</dt>
-                        {/* <dd>{{addr.balance_wei | weiToGO | bigNumber}}</dd> */}
+                        <dd>{numberWithCommas(weiToGO(addr?.balance_wei))}</dd>
                         <dd>{addr?.balance_wei}</dd>
 
                         {addr?.contract && (
@@ -190,7 +191,16 @@ const Address = () => {
                             {addr?.total_supply && (
                               <>
                                 <dt>Total supply:</dt>
-                                {/* <dd>{{addr.total_supply | weiToGO: false : true : addr.decimals ? addr.decimals : 0 | bigNumber}}</dd> */}
+                                <dd>
+                                  {weiToGO(
+                                    addr?.total_supply,
+                                    false,
+                                    true,
+                                    addr?.decimals
+                                      ? numberWithCommas(addr?.decimals)
+                                      : 0
+                                  )}
+                                </dd>
                                 <dd>{addr?.total_supply}</dd>
                               </>
                             )}
@@ -212,22 +222,17 @@ const Address = () => {
                         )}
                         <dt>Total transactions:</dt>
                         <dd>{addr?.number_of_transactions || 0}</dd>
-                        {/* <ng-container *ngIf="addr.erc_types && !!addr.erc_types.length"> */}
                         {addr?.erc_types && !!addr?.erc_types.length && (
                           <>
                             <dt>Token type:</dt>
-                            <dd>
-                              {/* <span className="badge badge-primary mr-1"
-                               *ngFor="let type of addr.erc_types">{{tokenTypes[type]}}</span> */}
-                              {addr.erc_types.map((item: any, index: any) => (
-                                <span key={index}>
+                            <dd>                              {addr.erc_types.map((item: any, index: any) => (
+                                <span key={index} className="badge badge-primary mr-1">
                                   {TOKEN_TYPES[item?.type]}
                                 </span>
                               ))}
                             </dd>
                           </>
                         )}
-                        {/* </ng-container> */}
                         <dt>Updated at:</dt>
                         <dd>
                           {addr?.updated_at &&

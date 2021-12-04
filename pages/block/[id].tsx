@@ -1,18 +1,26 @@
+import { numberWithCommas, weiToGO } from "@Utils/functions";
+import { useDispatch, useSelector } from "react-redux";
+
 import AppLayout from "@Components/Layout/AppLayout";
 import Head from "next/head";
 import Link from "next/link";
+import Pagination from "@Components/Partials/Pagination";
 import React from "react";
 import { YY_MM_DD_HH_mm_ss } from "@Utils/constants";
+import { getBlockTransactions } from "@Redux/actions/block";
 import moment from "moment";
 import { request } from "@Pages/api/handler";
 import styles from "@Styles/Home.module.css";
 import { useRouter } from "next/router";
 
 const BlockDetail = () => {
+  const dispatch = useDispatch();
   const [queryId, $queryId] = React.useState<any | null>("");
   const [signers, setSigners] = React.useState<any | null>("");
   const [blockDetail, setBlockDetail] = React.useState<any | null>({});
-  const [transactions, setTransactions] = React.useState<any | null>([]);
+  const { transactions } = useSelector((state: any) => state?.block) || [];
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(25);
   const router = useRouter();
 
   React.useEffect(() => {
@@ -49,16 +57,14 @@ const BlockDetail = () => {
     });
   }, [queryId]);
 
-  const getBlockTransaction = async () => {
-    if (queryId) {
-      const result = await request.getBlockTransactions(queryId);
-      return result;
-    }
-  };
-
   React.useEffect(() => {
-    getBlockTransaction().then((res) => setTransactions(res?.data));
-  }, [queryId]);
+    if (queryId) {
+      console.log("queryId", queryId);
+      dispatch(
+        getBlockTransactions({ addrHash: queryId, currentPage, pageSize })
+      );
+    }
+  }, [currentPage, pageSize, queryId]);
 
   return (
     <div className={styles.container}>
@@ -119,20 +125,28 @@ const BlockDetail = () => {
                   )}
                 </dd>
                 <dt>Gas Limit</dt>
-                {/* <dd>{{block.gas_limit | bigNumber}}</dd> */}
+                <dd>{numberWithCommas(blockDetail?.gas_limit)}</dd>
                 <dd>{blockDetail?.gas_limit}</dd>
                 <dt>Gas Used</dt>
-                {/* <dd>{{block.gas_used | bigNumber}}</dd> */}
+                <dd>{numberWithCommas(blockDetail?.gas_used)}</dd>
                 <dd>{blockDetail?.gas_used}</dd>
-                {/* <ng-container *ngIf="block.gas_fees"> */}
                 {blockDetail?.gas_fees && (
                   <>
                     <dt>Gas Fees</dt>
                     <dd>
-                      {/* {{blockDetail.gas_fees | weiToGO | bigNumber}} */}
-                      {blockDetail?.gas_fees}
-                      {/* <ng-container *ngIf="block.total_fees_burned" popover-title="block.total_fees_burned | weiToGO | bigNumber"> */}
-                      (<img src="/assets/icons/fire.svg" /> burned)
+                      {numberWithCommas(weiToGO(blockDetail?.gas_fees))}(
+                      <span
+                        title={
+                          blockDetail?.total_fees_burned
+                            ? numberWithCommas(
+                                weiToGO(blockDetail?.total_fees_burned)
+                              )
+                            : ""
+                        }
+                      >
+                        <img src="/assets/icons/fire.svg" /> burned
+                      </span>
+                      )
                     </dd>
                   </>
                 )}
@@ -193,7 +207,6 @@ const BlockDetail = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {/* <tr *ngFor="let tx of transactions"> */}
                       {transactions.map((tx: any) => {
                         return (
                           <tr key={tx?.tx_hash}>
@@ -236,7 +249,9 @@ const BlockDetail = () => {
                               </Link>
                             </td>
                             <td>
-                              {/* {{tx.value | weiToGO: false : true | bigNumber}} */}
+                              {numberWithCommas(
+                                weiToGO(tx?.value, false, true)
+                              )}
                               {tx.value}
                             </td>
                           </tr>
@@ -246,6 +261,13 @@ const BlockDetail = () => {
                   </table>
                   <div className="mt-4">
                     {/* <app-pagination [queryParam]="transactionQueryParams"></app-pagination> */}
+                    <Pagination
+                      currentPage={currentPage}
+                      totalCount={blockDetail?.tx_count || 0}
+                      pageSize={pageSize}
+                      onChangePageSize={(page: any) => setPageSize(page)}
+                      onPageChange={(page: any) => setCurrentPage(page)}
+                    />
                   </div>
                 </>
               ) : (

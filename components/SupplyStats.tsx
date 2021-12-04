@@ -1,16 +1,16 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { numberWithCommas, transform } from "@Utils/functions";
+import { useDispatch, useSelector } from "react-redux";
 
 import React from "react";
-import { getSupplyStats } from '@Redux/actions/home/index';
+import { getSupplyStats } from "@Redux/actions/home/index";
 
 const SupplyStats = () => {
   const dispatch = useDispatch();
-  const { supplyStats } = useSelector((state: any) => state?.home) || {}
+  const { supplyStats } = useSelector((state: any) => state?.home) || {};
 
   React.useEffect(() => {
-    dispatch(getSupplyStats({}))
-  }, [])
-
+    dispatch(getSupplyStats({}));
+  }, []);
 
   return (
     <div className="card h-100">
@@ -19,20 +19,33 @@ const SupplyStats = () => {
           <img src="/assets/icons/comparison.svg" /> SUPPLY STATS
         </div>
         <dl>
-          {/* <ng-container *ngIf="supplyStats$ | async as supplyStats"> */}
           <dt>Total</dt>
           <dd>
-            {/* <span className="text-monospace">{{supplyStats.total | weiToWholeGO | bigNumber}}</span> GO */}
-            {/* <ng-container *ngIf="supplyStats.fees_burned > 0"> */}
-            {/* <br/><span className="text-monospace">{{supplyStats.fees_burned | weiToWholeGO | bigNumber}}</span>  */}
-            GO burned <img src="/assets/icons/fire.svg" />
-            {/* </ng-container> */}
+            <span className="text-monospace">
+              {supplyStats?.total &&
+                numberWithCommas(transform(supplyStats?.total))}
+            </span>{" "}
+            GO
+            {supplyStats?.fees_burned &&
+              transform(supplyStats?.fees_burned) > 0 && (
+                <>
+                  <br />
+                  <span className="text-monospace">
+                    {supplyStats?.fees_burned &&
+                      numberWithCommas(transform(supplyStats?.fees_burned))}
+                  </span>
+                  GO burned <img src="/assets/icons/fire.svg" />
+                </>
+              )}
           </dd>
           <dt>Circulating</dt>
           <dd>
-            {/* <span className="text-monospace">{{supplyStats.circulating | weiToWholeGO | bigNumber}}</span> GO */}
+            <span className="text-monospace">
+              {supplyStats?.circulating &&
+                numberWithCommas(transform(supplyStats?.circulating))}
+            </span>{" "}
+            GO
           </dd>
-          {/* </ng-container> */}
         </dl>
       </div>
     </div>

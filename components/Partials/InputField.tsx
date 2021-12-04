@@ -6,6 +6,7 @@ const InputFieldForm = ({
   placeholder = "",
   name = "",
   required = true,
+  handleChangeValue = () => null,
   renderFooter = () => null,
   value=""
 }: any) => {
@@ -47,6 +48,7 @@ const InputFieldForm = ({
         required={required}
         readOnly={isProcessing}
         value={value}
+        onChange={(e) => handleChangeValue(e)}
       />
       <div className="input-group-append">
         <button

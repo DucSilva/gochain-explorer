@@ -11,13 +11,14 @@ import styles from "@Styles/Home.module.css";
 import { useRouter } from "next/router";
 
 const Wallet: NextPage = () => {
+  const [privateKey, $privateKey] = React.useState("");
   const router = useRouter();
   const dispatch = useDispatch();
   const { isProcessing } = useSelector((state: any) => state.wallet) || {};
 
   const onPrivateKeySubmit = (e: any) => {
     e.preventDefault();
-    const privateKey: string = e.target["privateKey"].value;
+
     if (privateKey) {
       dispatch(openWallet({ privateKey, router }));
     }
@@ -49,6 +50,10 @@ const Wallet: NextPage = () => {
                       name="privateKey"
                       isProcessing={isProcessing}
                       className=""
+                      value={privateKey}
+                      handleChangeValue={(e: any) =>
+                        $privateKey(e.target.value)
+                      }
                     />
                     <button
                       type="submit"

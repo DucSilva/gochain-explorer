@@ -3,6 +3,7 @@
  */
 
 import address from "./address";
+import block from "./block";
 import { combineReducers } from "redux";
 import home from "./home";
 import signer from "./signers";
@@ -13,7 +14,8 @@ export default function createReducer() {
     home,
     address,
     signer,
-    wallet
+    wallet,
+    block,
   });
 
   const rootReducer = (state: any, action: any) => appReducer(state, action);

@@ -1,3 +1,4 @@
+import { numberWithCommas, weiToGO } from '@Utils/functions'
 import { useDispatch, useSelector } from "react-redux";
 
 import Link from "next/link";
@@ -109,15 +110,8 @@ const AddrTransactions = (addrHash: any) => {
                     )}
 
                     <td className="text-nowrap text-right text-monospace ws-p">
-                      {/* {tx?.value === '0' ? '' : tx?.from === tx?.to ? '+/-' : addr?.address === tx?.to ? '+' : '-'} {tx?.value | weiToGO: false : true | bigNumber}} */}
-                      {tx?.value === "0"
-                        ? ""
-                        : tx?.from === tx?.to
-                        ? "+/-"
-                        : addr?.address === tx?.to
-                        ? "+"
-                        : "-"}{" "}
-                      {tx?.value}
+                      {tx?.value === '0' ? '' : tx?.from === tx?.to ? '+/-' : addr?.address === tx?.to ? '+' : '-'}
+                      {numberWithCommas(weiToGO(tx?.value, false, true))}
                     </td>
                   </tr>
                 );
