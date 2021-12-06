@@ -1,6 +1,7 @@
 import {
   closeAccount,
   getWalletAddr,
+  openWallet,
   resetProcessingWallet,
 } from "@Redux/actions/wallet";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,22 +12,28 @@ import ControlledTabs from "@Components/Tabs";
 import Deployer from "@Components/Deployer";
 import Head from "next/head";
 import Interactor from "@Components/Interactor";
-import Link from "next/link";
 import Loading from "@Components/Loading";
 import type { NextPage } from "next";
 import OwnedToken from "@Components/OwnedToken";
 import React from "react";
 import Sender from "@Components/Sender";
 import _ from "lodash";
+import { convertWithDecimals } from "@Utils/functions";
 import styles from "@Styles/Home.module.css";
 import { useRouter } from "next/router";
 
 const WalletAccount: NextPage = () => {
   const dispatch = useDispatch();
   const [queryId, $queryId] = React.useState<any | null>("");
+  const [privateKey, $privateKey] = React.useState<any | null>("");
   const router = useRouter();
   const { account, accountBalance, isLoading, isProcessing, receipt, addr } =
     useSelector((state: any) => state.wallet) || {};
+
+  React.useEffect(() => {
+    let key = JSON.parse(localStorage.getItem("privateKey") || "{}");
+    if (key) $privateKey(key);
+  }, []);
 
   React.useEffect(() => {
     const { query } = router;
@@ -41,6 +48,12 @@ const WalletAccount: NextPage = () => {
       dispatch(getWalletAddr({ addrHash: queryId }));
     }
   }, [queryId]);
+
+  React.useEffect(() => {
+    if (privateKey) {
+      dispatch(openWallet({ privateKey }));
+    }
+  }, [privateKey]);
 
   const closeAccountWallet = () => {
     dispatch(closeAccount({ account: null, accountBalance: null }));
@@ -115,7 +128,7 @@ const WalletAccount: NextPage = () => {
                     <p>
                       Balance (GO):{" "}
                       <span className="text-monospace">
-                        {_.toNumber(accountBalance || 0)}
+                        {convertWithDecimals(_.toNumber(accountBalance || 0))}
                       </span>
                     </p>
                     <p>

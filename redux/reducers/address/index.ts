@@ -16,15 +16,21 @@ import {
   GET_OWNED_TOKENS_FAILED,
   GET_OWNED_TOKENS_REQUEST,
   GET_OWNED_TOKENS_SUCCESS,
+  GET_RECENT_BLOCK_NUMBER_FAILED,
+  GET_RECENT_BLOCK_NUMBER_REQUEST,
+  GET_RECENT_BLOCK_NUMBER_SUCCESS,
   GET_TOKEN_HOLDERS_FAILED,
   GET_TOKEN_HOLDERS_REQUEST,
   GET_TOKEN_HOLDERS_SUCCESS,
   GET_TOKEN_TXS_FAILED,
   GET_TOKEN_TXS_REQUEST,
   GET_TOKEN_TXS_SUCCESS,
+  GET_TRANSACTION_TX_FAILED,
+  GET_TRANSACTION_TX_REQUEST,
+  GET_TRANSACTION_TX_SUCCESS,
 } from "@Redux/actions/address/index";
 
-const initialState = {
+const initialState: any = {
   isLoading: false,
   addr: {},
   error: {},
@@ -35,6 +41,8 @@ const initialState = {
   token_transactions: [],
   owned_tokens: [],
   contract: [],
+  tx: {},
+  recentBlockNumber: "",
 };
 
 const addressReducer = (state = initialState, action: any) => {
@@ -227,6 +235,62 @@ const addressReducer = (state = initialState, action: any) => {
     }
 
     case GET_CONTRACT_FAILED: {
+      const { error } = action;
+      return {
+        ...state,
+        // isLoading: false,
+        error,
+      };
+    }
+
+    case GET_TRANSACTION_TX_REQUEST: {
+      const { payload } = action;
+      return {
+        ...state,
+        isLoading: true,
+        payload,
+      };
+    }
+
+    case GET_TRANSACTION_TX_SUCCESS: {
+      const { data } = action;
+
+      return {
+        ...state,
+        isLoading: false,
+        tx: data,
+      };
+    }
+
+    case GET_TRANSACTION_TX_FAILED: {
+      const { error } = action;
+      return {
+        ...state,
+        isLoading: false,
+        error,
+      };
+    }
+
+    case GET_RECENT_BLOCK_NUMBER_REQUEST: {
+      const { payload } = action;
+      return {
+        ...state,
+        // isLoading: true,
+        payload,
+      };
+    }
+
+    case GET_RECENT_BLOCK_NUMBER_SUCCESS: {
+      const { data } = action;
+
+      return {
+        ...state,
+        // isLoading: false,
+        recentBlockNumber: data,
+      };
+    }
+
+    case GET_RECENT_BLOCK_NUMBER_FAILED: {
       const { error } = action;
       return {
         ...state,

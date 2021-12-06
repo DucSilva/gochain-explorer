@@ -59,7 +59,6 @@ const BlockDetail = () => {
 
   React.useEffect(() => {
     if (queryId) {
-      console.log("queryId", queryId);
       dispatch(
         getBlockTransactions({ addrHash: queryId, currentPage, pageSize })
       );
@@ -126,10 +125,8 @@ const BlockDetail = () => {
                 </dd>
                 <dt>Gas Limit</dt>
                 <dd>{numberWithCommas(blockDetail?.gas_limit)}</dd>
-                <dd>{blockDetail?.gas_limit}</dd>
                 <dt>Gas Used</dt>
                 <dd>{numberWithCommas(blockDetail?.gas_used)}</dd>
-                <dd>{blockDetail?.gas_used}</dd>
                 {blockDetail?.gas_fees && (
                   <>
                     <dt>Gas Fees</dt>
@@ -260,7 +257,6 @@ const BlockDetail = () => {
                     </tbody>
                   </table>
                   <div className="mt-4">
-                    {/* <app-pagination [queryParam]="transactionQueryParams"></app-pagination> */}
                     <Pagination
                       currentPage={currentPage}
                       totalCount={blockDetail?.tx_count || 0}

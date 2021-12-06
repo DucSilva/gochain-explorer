@@ -29,11 +29,7 @@ const Sender = ({ addr, addrHash }: any) => {
 
   const sendGo = (e: any) => {
     e.preventDefault();
-    if (
-      _.isEmpty(stateForm.to) ||
-      _.isEmpty(stateForm.amount) ||
-      _.isEmpty(stateForm.gasLimit)
-    ) {
+    if (_.isEmpty(stateForm)) {
       dispatch(
         toastInformation({
           show: true,

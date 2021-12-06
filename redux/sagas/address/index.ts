@@ -8,6 +8,7 @@ import {
   GET_OWNED_TOKENS_REQUEST,
   GET_TOKEN_HOLDERS_REQUEST,
   GET_TOKEN_TXS_REQUEST,
+  GET_TRANSACTION_TX_REQUEST,
   getAddressFailed,
   getAddressHolderFailed,
   getAddressHolderSuccess,
@@ -22,7 +23,19 @@ import {
   getContractSuccess,
   getOwnedTokensFailed,
   getOwnedTokensSuccess,
+  getTransactionTxFailed,
+  getTransactionTxSuccess,
+  GET_RECENT_BLOCK_NUMBER_REQUEST,
+  getRecentBlockNumSuccess,
+  getRecentBlockNumFailed,
 } from "@Redux/actions/address";
+import {
+  ProcessedABIData,
+  ProcessedABIItem,
+  ProcessedLog,
+  Transaction,
+  TxLog,
+} from "@Models/transaction.model";
 import { all, put, takeLatest } from "redux-saga/effects";
 
 import { request } from "@Pages/api/handler";
@@ -142,11 +155,7 @@ function* getOwnedTokens({ payload }: any) {
   try {
     if (addrHash) {
       if (currentPage && pageSize) {
-        const { data } = yield call(
-          request.getOwnedTokens,
-          addrHash,
-          _data
-        );
+        const { data } = yield call(request.getOwnedTokens, addrHash, _data);
         yield put(getOwnedTokensSuccess(data));
       } else {
         const { data } = yield call(request.getOwnedTokens, addrHash);
@@ -172,6 +181,38 @@ function* getContracts({ payload }: any) {
   }
 }
 
+function* getTransactionTx({ payload }: any) {
+  const { addrHash, nonceId = "" } = payload || {};
+
+  try {
+    if (addrHash) {
+      let res: any = yield call(request.getTransaction, addrHash, nonceId);
+
+      if (res?.data) {
+        let tx: Transaction | null = res?.data;
+        if (!tx) {
+        }
+        tx.input_data = "0x" + tx.input_data;
+        tx.parsedLogs = JSON.parse(tx.logs);
+        tx.prettifiedLogs = JSON.stringify(tx.parsedLogs, null, "\t");
+
+        yield put(getTransactionTxSuccess(tx));
+      }
+    }
+  } catch (error) {
+    yield put(getTransactionTxFailed(error));
+  }
+}
+
+function* getBlockNumber({ payload }: any) {
+  try {
+    let data: any  = yield call(request.getBlockNumber);
+    yield put(getRecentBlockNumSuccess(data));
+  } catch (error) {
+    yield put(getRecentBlockNumFailed(error));
+  }
+}
+
 export function* addressSaga() {
   yield all([
     takeLatest(GET_ADDRESS_REQUEST, getAddressContract),
@@ -181,5 +222,7 @@ export function* addressSaga() {
     takeLatest(GET_TOKEN_TXS_REQUEST, getAddressTokenTXS),
     takeLatest(GET_OWNED_TOKENS_REQUEST, getOwnedTokens),
     takeLatest(GET_CONTRACT_REQUEST, getContracts),
+    takeLatest(GET_TRANSACTION_TX_REQUEST, getTransactionTx),
+    takeLatest(GET_RECENT_BLOCK_NUMBER_REQUEST, getBlockNumber),
   ]);
 }

@@ -29,11 +29,11 @@ function* openWallets({ payload }: any): any {
     if (privateKey.length === 66) {
       let account = yield call(request.getAccountWallet, privateKey);
       localStorage.setItem("account", JSON.stringify(account));
+      localStorage.setItem("privateKey", JSON.stringify(privateKey));
 
       if (account?.address) {
         let accountBalance = yield call(request.getBalance, account?.address);
-        fromWei(accountBalance, 'ether').toString();
-        console.log('accountBalance', accountBalance)
+        fromWei(accountBalance, "ether").toString();
         if (accountBalance) {
           yield put(setAccountBalance(accountBalance));
 
@@ -45,10 +45,12 @@ function* openWallets({ payload }: any): any {
             })
           );
 
-          router.push({
-            pathname: "/wallet/account",
-            query: { addrHash: account?.address },
-          });
+          if (router) {
+            router.push({
+              pathname: "/wallet/account",
+              query: { addrHash: account?.address },
+            });
+          }
         }
         yield put(openWalletSuccess(account));
       }
@@ -99,9 +101,7 @@ function* createAccountRequest({ payload }: any) {
 }
 
 function* sendGORequest({ payload }: any) {
-  console.log("payload", payload);
   let { to, amount: value, gasLimit: gas, account } = payload?.payload;
-  console.log("account", account);
   try {
     if (to.length !== 42 || !isAddress(to)) {
       yield put(
@@ -116,7 +116,18 @@ function* sendGORequest({ payload }: any) {
 
     try {
       value = toWei(value, "ether");
+
+      const tx: TransactionConfig = {
+        to,
+        value,
+        gas,
+      };
+      yield delay(10000);
+      let receipt: TransactionReceipt = yield call(request.sendTx, tx, account);
+      // console.log("receipt", receipt);
+      // yield put(sendGOSuccess(account));
     } catch (e) {
+      console.log("e", e);
       toastInformation({
         show: true,
         content: e,
@@ -124,16 +135,6 @@ function* sendGORequest({ payload }: any) {
       });
       return;
     }
-
-    const tx: TransactionConfig = {
-      to,
-      value,
-      gas,
-    };
-    yield delay(10000);
-    let receipt: TransactionReceipt = yield call(request.sendTx, tx, account);
-    console.log('receipt', receipt)
-    // yield put(sendGOSuccess(account));
   } catch (error) {
     yield put(sendGOFailed(error));
   }

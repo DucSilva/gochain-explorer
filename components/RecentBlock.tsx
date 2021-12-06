@@ -11,6 +11,11 @@ const RecentBlock = () => {
   const { blocks: data } = useSelector((state: any) => state?.home) || {};
 
   React.useEffect(() => {
+    const timer = setInterval(() => dispatch(getBlock({})), 10000);
+    return () => clearInterval(timer);
+  });
+
+  React.useEffect(() => {
     dispatch(getBlock({}));
   }, []);
 

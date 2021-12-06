@@ -1,29 +1,43 @@
-import { Contract } from '@Models/contract.model';
+import { Contract } from "@Models/contract.model";
 
 export const GET_ADDRESS_REQUEST = "GET_ADDRESS_REQUEST";
 export const GET_ADDRESS_SUCCESS = "GET_ADDRESS_SUCCESS";
 export const GET_ADDRESS_FAILED = "GET_ADDRESS_FAILED";
+
 export const GET_ADDRESS_TRANSACTIONS_REQUEST =
   "GET_ADDRESS_TRANSACTIONS_REQUEST";
 export const GET_ADDRESS_TRANSACTIONS_SUCCESS =
   "GET_ADDRESS_TRANSACTIONS_SUCCESS";
 export const GET_ADDRESS_TRANSACTIONS_FAILED =
   "GET_ADDRESS_TRANSACTIONS_FAILED";
+
 export const GET_ADDRESS_INTERNAL_REQUEST = "GET_ADDRESS_INTERNAL_REQUEST";
 export const GET_ADDRESS_INTERNAL_SUCCESS = "GET_ADDRESS_INTERNAL_SUCCESS";
 export const GET_ADDRESS_INTERNAL_FAILED = "GET_ADDRESS_INTERNAL_FAILED";
+
 export const GET_TOKEN_HOLDERS_REQUEST = "GET_TOKEN_HOLDERS_REQUEST";
 export const GET_TOKEN_HOLDERS_SUCCESS = "GET_TOKEN_HOLDERS_SUCCESS";
 export const GET_TOKEN_HOLDERS_FAILED = "GET_TOKEN_HOLDERS_FAILED";
+
 export const GET_TOKEN_TXS_REQUEST = "GET_TOKEN_TXS_REQUEST";
 export const GET_TOKEN_TXS_SUCCESS = "GET_TOKEN_TXS_SUCCESS";
 export const GET_TOKEN_TXS_FAILED = "GET_TOKEN_TXS_FAILED";
+
 export const GET_OWNED_TOKENS_REQUEST = "GET_OWNED_TOKENS_REQUEST";
 export const GET_OWNED_TOKENS_SUCCESS = "GET_OWNED_TOKENS_SUCCESS";
 export const GET_OWNED_TOKENS_FAILED = "GET_OWNED_TOKENS_FAILED";
+
 export const GET_CONTRACT_REQUEST = "GET_CONTRACT_REQUEST";
 export const GET_CONTRACT_SUCCESS = "GET_CONTRACT_SUCCESS";
 export const GET_CONTRACT_FAILED = "GET_CONTRACT_FAILED";
+
+export const GET_TRANSACTION_TX_REQUEST = "GET_TRANSACTION_TX_REQUEST";
+export const GET_TRANSACTION_TX_SUCCESS = "GET_TRANSACTION_TX_SUCCESS";
+export const GET_TRANSACTION_TX_FAILED = "GET_TRANSACTION_TX_FAILED";
+
+export const GET_RECENT_BLOCK_NUMBER_REQUEST = "GET_RECENT_BLOCK_NUMBER_REQUEST";
+export const GET_RECENT_BLOCK_NUMBER_SUCCESS = "GET_RECENT_BLOCK_NUMBER_SUCCESS";
+export const GET_RECENT_BLOCK_NUMBER_FAILED = "GET_RECENT_BLOCK_NUMBER_FAILED";
 
 export const getAddress = (payload: any) => ({
   type: GET_ADDRESS_REQUEST,
@@ -141,5 +155,39 @@ export const getContractSuccess = (data: Contract) => {
 
 export const getContractFailed = (error: any) => ({
   type: GET_CONTRACT_FAILED,
+  error,
+});
+
+export const getTransactionTx = (payload: any) => ({
+  type: GET_TRANSACTION_TX_REQUEST,
+  payload,
+});
+
+export const getTransactionTxSuccess = (data: Contract) => {
+  return {
+    type: GET_TRANSACTION_TX_SUCCESS,
+    data,
+  };
+};
+
+export const getTransactionTxFailed = (error: any) => ({
+  type: GET_TRANSACTION_TX_FAILED,
+  error,
+});
+
+export const getRecentBlockNum = (payload: any) => ({
+  type: GET_RECENT_BLOCK_NUMBER_REQUEST,
+  payload,
+});
+
+export const getRecentBlockNumSuccess = (data: Contract) => {
+  return {
+    type: GET_RECENT_BLOCK_NUMBER_SUCCESS,
+    data,
+  };
+};
+
+export const getRecentBlockNumFailed = (error: any) => ({
+  type: GET_RECENT_BLOCK_NUMBER_FAILED,
   error,
 });

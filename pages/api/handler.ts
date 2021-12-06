@@ -1,9 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
+import {
+  SignedTransaction,
+  TransactionConfig,
+  TransactionReceipt,
+  Transaction as Web3Tx,
+} from "web3-core";
 
 import { Account } from "web3-core";
 import Axios from "axios";
-import { TransactionConfig } from "web3-core";
 import Web3 from "web3";
 
 const ins = Axios.create({
@@ -90,31 +95,113 @@ export const request = {
     return web3.accounts.create();
   },
 
-  sendTx(tx: TransactionConfig, account: Account): void {
-    console.log("account", account);
-    console.log("tx", tx);
+  sendSignedTx(signed: SignedTransaction): TransactionReceipt {
+    console.log("signed", signed);
+    return web3.sendSignedTransaction(signed?.rawTransaction);
+  },
+
+  sendTx(tx: TransactionConfig, account: Account) {
     web3.getTransactionCount(account?.address).then((res: any) => {
-      console.log("res", res);
+      // concatMap((nonce) => {
+      //   console.log('nonce', nonce)
+      //   tx.nonce = nonce;
+      //   const p2: Promise<SignedTransaction> = web3.accounts.signTransaction(
+      //     tx,
+      //     account?.privateKey
+      //   );
+      //   return p2;
+      // }),
+      //   concatMap((signed: SignedTransaction) => {
+      //     const res = this.sendSignedTx(signed);
+      //     console.log("res", res);
+      //   });
     });
-    // this.isProcessing = true;
-    // this.w3Call.subscribe((web3: Web3) => {
-    //   const p: Promise<number> = web3.eth.getTransactionCount(this.account.address);
-    //   fromPromise(p).pipe(
-    //       concatMap(nonce => {
-    //         tx.nonce = nonce;
-    //         const p2: Promise<SignedTransaction> = web3.eth.accounts.signTransaction(tx, this.account.privateKey);
-    //         return fromPromise(p2);
-    //       }),
-    //       concatMap((signed: SignedTransaction) => {
-    //         return this.sendSignedTx(signed);
-    //       })
-    //   ).subscribe((receipt: TransactionReceipt) => {
-    //     this.receipt = receipt;
-    //     this.getBalance();
-    //   }, err => {
-    //     this._toastrService.danger(err);
-    //     this.resetProcessing();
-    //   });
+    // this.receipt = receipt;
+    // this.getBalance();
+    // }, err => {
+    //   // this._toastrService.danger(err);
+    //   // this.resetProcessing();
+    // });
+    // });
+    //   web3.accounts
+    //     .signTransaction(tx, account?.privateKey)
+    //     .then((response: any) => {
+    //       console.log("response", response);
+    //     });
+    // });
+
+    // console.log("p", p);
+    // fromPromise(p).pipe(
+    //         concatMap(nonce => {
+    //           tx.nonce = nonce;
+    //           const p2: Promise<SignedTransaction> = web3.eth.accounts.signTransaction(tx, this.account.privateKey);
+    //           return fromPromise(p2);
+    //         }),
+    //         concatMap((signed: SignedTransaction) => {
+    //           return this.sendSignedTx(signed);
+    //         })
+    //     ).subscribe((receipt: TransactionReceipt) => {
+    //       this.receipt = receipt;
+    //       this.getBalance();
+    //     }, err => {
+    //       this._toastrService.danger(err);
+    //       this.resetProcessing();
+    //     });
     // });
   },
+
+  getTxData(hash: string) {
+    // return this.w3Call.pipe(
+    //   concatMap((web3: Web3) => {
+    //     return forkJoin<Web3Tx, TransactionReceipt>([
+    //       fromPromise<Web3Tx>(web3.eth.getTransaction(txHash)),
+    //       fromPromise<TransactionReceipt>(
+    //         web3.eth.getTransactionReceipt(txHash)
+    //       ),
+    //     ]).pipe(
+    //       map((res: [Web3Tx, TransactionReceipt]) => {
+    //         if (!res[0]) {
+    //           return null;
+    //         }
+    //         const tx: Web3Tx = res[0];
+    //         const txReceipt = res[1];
+    //         const finalTx: Transaction = new Transaction();
+    //         finalTx.tx_hash = tx.hash;
+    //         finalTx.value = tx.value;
+    //         finalTx.gas_price = tx.gasPrice;
+    //         finalTx.gas_limit = "" + tx.gas;
+    //         finalTx.nonce = tx.nonce;
+    //         finalTx.input_data = tx.input.replace(/^0x/, "");
+    //         finalTx.from = tx.from;
+    //         finalTx.to = tx.to;
+    //         if (txReceipt) {
+    //           finalTx.block_number = tx.blockNumber;
+    //           finalTx.gas_fee = "" + +tx.gasPrice * txReceipt.gasUsed;
+    //           finalTx.contract_address =
+    //             txReceipt.contractAddress &&
+    //             txReceipt.contractAddress !==
+    //               "0x0000000000000000000000000000000000000000"
+    //               ? txReceipt.contractAddress
+    //               : null;
+    //           finalTx.status = txReceipt.status;
+    //           finalTx.created_at = new Date();
+    //         }
+    //         return finalTx;
+    //       })
+    //     );
+    //   })
+    // );
+  },
+
+  getTransaction(hash: string, nonceId: string): any {
+    if (nonceId) {
+      return ins.get("/address/" + hash + "/tx/" + nonceId);
+    } else {
+      return ins.get("/transaction/" + hash);
+    }
+  },
+
+  getBlockNumber(){
+    return web3.getBlockNumber()
+  }
 };

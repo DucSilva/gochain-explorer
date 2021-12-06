@@ -9,8 +9,13 @@ const SupplyStats = () => {
   const { supplyStats } = useSelector((state: any) => state?.home) || {};
 
   React.useEffect(() => {
-    dispatch(getSupplyStats({}));
-  }, []);
+    const timer = setInterval(() => dispatch(getSupplyStats({})), 10000);
+    return () => clearInterval(timer);
+  });
+
+  React.useEffect(() => {
+    dispatch(getSupplyStats({}))
+  }, [])
 
   return (
     <div className="card h-100">

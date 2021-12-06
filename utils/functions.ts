@@ -246,3 +246,24 @@ export function weiToGO(
 ): string {
   return convertWithDecimals(val, showUnit, removeTrailingZeros, decimals);
 }
+
+export function toGwei(val: number): string {
+  if (!val) {
+    return "";
+  }
+
+  return val / 1e9 + " gwei";
+}
+
+export function hex2str(val: string, convert: boolean = true): string {
+  if (convert) {
+    let tempstr = '';
+    let b = 0;
+    while (b < val.length) {
+      tempstr = tempstr + String.fromCharCode(parseInt(val.substr(b, 2), 16));
+      b = b + 2;
+    }
+    return tempstr;
+  }
+  return val;
+}

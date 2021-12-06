@@ -14,6 +14,11 @@ const Transactions = () => {
   } = stats;
 
   React.useEffect(() => {
+    const timer = setInterval(() => dispatch(getStats({})), 10000);
+    return () => clearInterval(timer);
+  });
+
+  React.useEffect(() => {
     dispatch(getStats({}));
   }, []);
 

@@ -144,7 +144,6 @@ const Address = () => {
                         </dd>
                         <dt>Balance:</dt>
                         <dd>{numberWithCommas(weiToGO(addr?.balance_wei))}</dd>
-                        <dd>{addr?.balance_wei}</dd>
 
                         {addr?.contract && (
                           <>
