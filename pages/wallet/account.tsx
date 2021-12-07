@@ -2,7 +2,6 @@ import {
   closeAccount,
   getWalletAddr,
   openWallet,
-  resetProcessingWallet,
 } from "@Redux/actions/wallet";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -28,8 +27,9 @@ const WalletAccount: NextPage = () => {
   const [privateKey, $privateKey] = React.useState<any | null>("");
   const router = useRouter();
   const { account, accountBalance, isLoading, isProcessing, receipt, addr } =
-    useSelector((state: any) => state.wallet) || {};
-
+  useSelector((state: any) => state.wallet) || {};
+  
+  console.log('receipt', receipt)
   React.useEffect(() => {
     let key = JSON.parse(localStorage.getItem("privateKey") || "{}");
     if (key) $privateKey(key);
@@ -60,10 +60,6 @@ const WalletAccount: NextPage = () => {
     router.push("/wallet");
   };
 
-  const resetProcessing = () => {
-    dispatch(resetProcessingWallet({ receipt: null }));
-  };
-
   const tabs = [
     {
       title: "Tokens Held",
@@ -83,8 +79,8 @@ const WalletAccount: NextPage = () => {
     {
       title: "Send GO",
       eventKey: "send_go",
-      renderTab: () => <Sender addrHash={queryId} />,
-      isRender: !isProcessing,
+      renderTab: () => <Sender />,
+      isRender: true,
       isShowDes: false,
     },
     {
@@ -146,86 +142,6 @@ const WalletAccount: NextPage = () => {
                 <div className="card mt-4 mb-5">
                   <div className="card-body">
                     <ControlledTabs disabled={isProcessing} tabs={tabs} />
-
-                    {isProcessing && (
-                      <>
-                        {receipt ? (
-                          <>
-                            <div className="processing__icon">
-                              <img
-                                src="../../../assets/icons/loader.svg"
-                                alt="Processing"
-                              />
-                            </div>
-                            <div className="processing__content mt-4">
-                              Transaction submitted, waiting for receipt...
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="receipt">
-                              <div className="receipt__header text-center h4 text-primary mb-4">
-                                Transaction complete!
-                              </div>
-                              <div className="receipt__content mb-4">
-                                <div className="row">
-                                  <div className="col-md-2">
-                                    Transaction Hash:
-                                  </div>
-                                  <div className="col-md-10">
-                                    <a
-                                      href={`/tx/${receipt?.transactionHash}`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                    >
-                                      {receipt?.transactionHash}
-                                    </a>
-                                  </div>
-                                  <div className="col-md-2">Block Hash:</div>
-                                  <div className="col-md-10">
-                                    <a
-                                      href={`/block/${receipt?.blockHash}`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                    >
-                                      {receipt?.blockHash}
-                                    </a>
-                                  </div>
-                                  {receipt?.contractAddress && (
-                                    <>
-                                      <div className="col-md-2">
-                                        Contract Address:
-                                      </div>
-                                      <div className="col-md-10">
-                                        <a
-                                          href={`/address/${receipt?.contractAddress}`}
-                                          target="_blank"
-                                          rel="noreferrer"
-                                        >
-                                          {receipt?.contractAddress}
-                                        </a>
-                                      </div>
-                                    </>
-                                  )}
-                                  <div className="col-md-2">Gas Used:</div>
-                                  <div className="col-md-10">
-                                    {receipt?.gasUsed}
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="receipt__footer text-right">
-                                <button
-                                  onClick={() => resetProcessing()}
-                                  className="btn btn-primary"
-                                >
-                                  Go back
-                                </button>
-                              </div>
-                            </div>
-                          </>
-                        )}
-                      </>
-                    )}
                   </div>
                 </div>
               </div>

@@ -6,7 +6,7 @@ const Deployer = ({ addr, addrHash }: any) => {
   const [stateForm, $stateForm] = useState<any | null>({
     byteCode: "",
     gasLimit: 0,
-  });S
+  });
 
   const handleChangeValue = (e: any) => {
     $stateForm({

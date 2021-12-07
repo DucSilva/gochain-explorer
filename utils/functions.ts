@@ -266,4 +266,13 @@ export function hex2str(val: string, convert: boolean = true): string {
     return tempstr;
   }
   return val;
+};
+
+export function isValidJSON(text:any) {
+  try {
+    JSON.parse(text);
+    return true;
+  } catch {
+    return false;
+  }
 }

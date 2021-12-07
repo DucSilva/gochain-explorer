@@ -94,60 +94,22 @@ export const request = {
   createAccount() {
     return web3.accounts.create();
   },
+  async sendTx(tx: TransactionConfig, account: Account) {
+    let data: any = await web3
+      .getTransactionCount(account?.address)
+      .then(async (res: any) => {
+        tx.nonce = res;
 
-  sendSignedTx(signed: SignedTransaction): TransactionReceipt {
-    console.log("signed", signed);
-    return web3.sendSignedTransaction(signed?.rawTransaction);
-  },
-
-  sendTx(tx: TransactionConfig, account: Account) {
-    web3.getTransactionCount(account?.address).then((res: any) => {
-      // concatMap((nonce) => {
-      //   console.log('nonce', nonce)
-      //   tx.nonce = nonce;
-      //   const p2: Promise<SignedTransaction> = web3.accounts.signTransaction(
-      //     tx,
-      //     account?.privateKey
-      //   );
-      //   return p2;
-      // }),
-      //   concatMap((signed: SignedTransaction) => {
-      //     const res = this.sendSignedTx(signed);
-      //     console.log("res", res);
-      //   });
-    });
-    // this.receipt = receipt;
-    // this.getBalance();
-    // }, err => {
-    //   // this._toastrService.danger(err);
-    //   // this.resetProcessing();
-    // });
-    // });
-    //   web3.accounts
-    //     .signTransaction(tx, account?.privateKey)
-    //     .then((response: any) => {
-    //       console.log("response", response);
-    //     });
-    // });
-
-    // console.log("p", p);
-    // fromPromise(p).pipe(
-    //         concatMap(nonce => {
-    //           tx.nonce = nonce;
-    //           const p2: Promise<SignedTransaction> = web3.eth.accounts.signTransaction(tx, this.account.privateKey);
-    //           return fromPromise(p2);
-    //         }),
-    //         concatMap((signed: SignedTransaction) => {
-    //           return this.sendSignedTx(signed);
-    //         })
-    //     ).subscribe((receipt: TransactionReceipt) => {
-    //       this.receipt = receipt;
-    //       this.getBalance();
-    //     }, err => {
-    //       this._toastrService.danger(err);
-    //       this.resetProcessing();
-    //     });
-    // });
+       return web3.accounts
+          .signTransaction(tx, account.privateKey)
+          .then(async (_data: SignedTransaction) => {
+            let receipt = await web3.sendSignedTransaction(
+              _data?.rawTransaction
+              );
+            return receipt;
+          });
+      });
+    return data;
   },
 
   getTxData(hash: string) {
@@ -201,7 +163,7 @@ export const request = {
     }
   },
 
-  getBlockNumber(){
-    return web3.getBlockNumber()
-  }
+  getBlockNumber() {
+    return web3.getBlockNumber();
+  },
 };

@@ -1,4 +1,3 @@
-import { AbiItem, fromWei, isAddress, toWei } from "web3-utils";
 import { Account, TransactionConfig, TransactionReceipt } from "web3-core";
 import {
   CREATE_ACCOUNT_REQUEST,
@@ -16,7 +15,10 @@ import {
   setAccountBalance,
 } from "@Redux/actions/wallet";
 import { all, call, delay, put, takeLatest } from "redux-saga/effects";
+import { fromWei, isAddress, toWei } from "web3-utils";
 
+import _ from "lodash";
+import { isValidJSON } from "@Utils/functions";
 import { request } from "@Pages/api/handler";
 import { toastInformation } from "@Redux/actions/home";
 
@@ -66,13 +68,15 @@ function* openWallets({ payload }: any): any {
     }
   } catch (error) {
     yield put(openWalletFailed(error));
-    yield put(
-      toastInformation({
-        show: true,
-        content: error,
-        status: "danger",
-      })
-    );
+    if (isValidJSON(error)) {
+      yield put(
+        toastInformation({
+          show: true,
+          content: "Some field is wrong",
+          status: "danger",
+        })
+      );
+    }
   }
 }
 
@@ -100,7 +104,7 @@ function* createAccountRequest({ payload }: any) {
   }
 }
 
-function* sendGORequest({ payload }: any) {
+function* sendGORequest({ payload }: any): any {
   let { to, amount: value, gasLimit: gas, account } = payload?.payload;
   try {
     if (to.length !== 42 || !isAddress(to)) {
@@ -124,15 +128,34 @@ function* sendGORequest({ payload }: any) {
       };
       yield delay(10000);
       let receipt: TransactionReceipt = yield call(request.sendTx, tx, account);
-      // console.log("receipt", receipt);
-      // yield put(sendGOSuccess(account));
+      if (receipt) {
+        let accountBalance = yield call(request.getBalance, account?.address);
+        fromWei(accountBalance, "ether").toString();
+        if (accountBalance) {
+          yield put(setAccountBalance(accountBalance));
+
+          yield put(
+            toastInformation({
+              show: true,
+              content: "Updated balance.",
+              status: "info",
+            })
+          );
+        }
+      }
+      yield put(sendGOSuccess(receipt));
     } catch (e) {
-      console.log("e", e);
-      toastInformation({
-        show: true,
-        content: e,
-        status: "danger",
-      });
+      if (isValidJSON(e)) {
+        yield put(
+          toastInformation({
+            show: true,
+            content: "Some field is wrong",
+            status: "error",
+          })
+        );
+      }
+      yield put(sendGOFailed(e));
+
       return;
     }
   } catch (error) {

@@ -16,7 +16,7 @@ import {
   SET_ACCOUNT_BALANCE,
 } from "@Redux/actions/wallet";
 
-const initialState = {
+const initialState: any = {
   isLoading: false,
   isProcessing: false,
   account: {},
@@ -139,6 +139,7 @@ const walletReducer = (state = initialState, action: any) => {
       return {
         ...state,
         payload,
+        receipt: {},
         isProcessing: true,
       };
     }
@@ -147,7 +148,7 @@ const walletReducer = (state = initialState, action: any) => {
       const { data } = action;
       return {
         ...state,
-        // account: data,
+        receipt: data,
         isProcessing: false,
       };
     }
