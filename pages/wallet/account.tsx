@@ -1,8 +1,4 @@
-import {
-  closeAccount,
-  getWalletAddr,
-  openWallet,
-} from "@Redux/actions/wallet";
+import { closeAccount, getWalletAddr, openWallet } from "@Redux/actions/wallet";
 import { useDispatch, useSelector } from "react-redux";
 
 import AddrTransactions from "@Components/AddrTransactions";
@@ -26,10 +22,9 @@ const WalletAccount: NextPage = () => {
   const [queryId, $queryId] = React.useState<any | null>("");
   const [privateKey, $privateKey] = React.useState<any | null>("");
   const router = useRouter();
-  const { account, accountBalance, isLoading, isProcessing, receipt, addr } =
+  const { account, accountBalance, isLoading, isProcessing, addr } =
   useSelector((state: any) => state.wallet) || {};
   
-  console.log('receipt', receipt)
   React.useEffect(() => {
     let key = JSON.parse(localStorage.getItem("privateKey") || "{}");
     if (key) $privateKey(key);
@@ -124,7 +119,7 @@ const WalletAccount: NextPage = () => {
                     <p>
                       Balance (GO):{" "}
                       <span className="text-monospace">
-                        {convertWithDecimals(_.toNumber(accountBalance || 0))}
+                        {convertWithDecimals(accountBalance)}
                       </span>
                     </p>
                     <p>

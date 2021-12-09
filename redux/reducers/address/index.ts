@@ -10,6 +10,9 @@ import {
   GET_ADDRESS_TRANSACTIONS_FAILED,
   GET_ADDRESS_TRANSACTIONS_REQUEST,
   GET_ADDRESS_TRANSACTIONS_SUCCESS,
+  GET_COMPILER_LIST_FAILED,
+  GET_COMPILER_LIST_REQUEST,
+  GET_COMPILER_LIST_SUCCESS,
   GET_CONTRACT_FAILED,
   GET_CONTRACT_REQUEST,
   GET_CONTRACT_SUCCESS,
@@ -28,6 +31,9 @@ import {
   GET_TRANSACTION_TX_FAILED,
   GET_TRANSACTION_TX_REQUEST,
   GET_TRANSACTION_TX_SUCCESS,
+  VERIFY_CONTRACT_FAILED,
+  VERIFY_CONTRACT_REQUEST,
+  VERIFY_CONTRACT_SUCCESS,
 } from "@Redux/actions/address/index";
 
 const initialState: any = {
@@ -43,6 +49,7 @@ const initialState: any = {
   contract: [],
   tx: {},
   recentBlockNumber: "",
+  compilers: [],
 };
 
 const addressReducer = (state = initialState, action: any) => {
@@ -225,12 +232,12 @@ const addressReducer = (state = initialState, action: any) => {
     }
 
     case GET_CONTRACT_SUCCESS: {
-      const { contract } = action?.data;
+      const { data } = action;
 
       return {
         ...state,
         // isLoading: false,
-        contract,
+        contract: data,
       };
     }
 
@@ -295,6 +302,62 @@ const addressReducer = (state = initialState, action: any) => {
       return {
         ...state,
         // isLoading: false,
+        error,
+      };
+    }
+
+    case GET_COMPILER_LIST_REQUEST: {
+      const { payload } = action;
+      return {
+        ...state,
+        isLoading: true,
+        payload,
+      };
+    }
+
+    case GET_COMPILER_LIST_SUCCESS: {
+      const { data } = action?.data;
+
+      return {
+        ...state,
+        isLoading: false,
+        compilers: data,
+      };
+    }
+
+    case GET_COMPILER_LIST_FAILED: {
+      const { error } = action;
+      return {
+        ...state,
+        isLoading: false,
+        error,
+      };
+    }
+
+    case VERIFY_CONTRACT_REQUEST: {
+      const { payload } = action;
+      return {
+        ...state,
+        isLoading: true,
+        payload,
+      };
+    }
+
+    case VERIFY_CONTRACT_SUCCESS: {
+      const { data } = action?.data;
+
+      return {
+        ...state,
+        isLoading: false,
+        compilers: data,
+      };
+    }
+
+    case VERIFY_CONTRACT_FAILED: {
+      const { error } = action;
+      return {
+        ...state,
+        isLoading: false,
         error,
       };
     }

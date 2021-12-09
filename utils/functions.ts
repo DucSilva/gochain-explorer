@@ -276,3 +276,12 @@ export function isValidJSON(text:any) {
     return false;
   }
 }
+
+ export function abiMethod(val: AbiItem): string {
+  if (!val) {
+    return null;
+  }
+  const inputs = val.inputs.map(input => input.name);
+  // const outputs = val.outputs.map(output => output.name + (output.name ? ' ' : '') + output.type);
+  return `${val.name}(${inputs.join(', ')})`;
+}

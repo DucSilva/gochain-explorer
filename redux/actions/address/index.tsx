@@ -35,9 +35,19 @@ export const GET_TRANSACTION_TX_REQUEST = "GET_TRANSACTION_TX_REQUEST";
 export const GET_TRANSACTION_TX_SUCCESS = "GET_TRANSACTION_TX_SUCCESS";
 export const GET_TRANSACTION_TX_FAILED = "GET_TRANSACTION_TX_FAILED";
 
-export const GET_RECENT_BLOCK_NUMBER_REQUEST = "GET_RECENT_BLOCK_NUMBER_REQUEST";
-export const GET_RECENT_BLOCK_NUMBER_SUCCESS = "GET_RECENT_BLOCK_NUMBER_SUCCESS";
+export const GET_RECENT_BLOCK_NUMBER_REQUEST =
+  "GET_RECENT_BLOCK_NUMBER_REQUEST";
+export const GET_RECENT_BLOCK_NUMBER_SUCCESS =
+  "GET_RECENT_BLOCK_NUMBER_SUCCESS";
 export const GET_RECENT_BLOCK_NUMBER_FAILED = "GET_RECENT_BLOCK_NUMBER_FAILED";
+
+export const GET_COMPILER_LIST_REQUEST = "GET_COMPILER_LIST_REQUEST";
+export const GET_COMPILER_LIST_SUCCESS = "GET_COMPILER_LIST_SUCCESS";
+export const GET_COMPILER_LIST_FAILED = "GET_COMPILER_LIST_FAILED";
+
+export const VERIFY_CONTRACT_REQUEST = "VERIFY_CONTRACT_REQUEST";
+export const VERIFY_CONTRACT_SUCCESS = "VERIFY_CONTRACT_SUCCESS";
+export const VERIFY_CONTRACT_FAILED = "VERIFY_CONTRACT_FAILED";
 
 export const getAddress = (payload: any) => ({
   type: GET_ADDRESS_REQUEST,
@@ -189,5 +199,39 @@ export const getRecentBlockNumSuccess = (data: Contract) => {
 
 export const getRecentBlockNumFailed = (error: any) => ({
   type: GET_RECENT_BLOCK_NUMBER_FAILED,
+  error,
+});
+
+export const getCompilerList = (payload: any) => ({
+  type: GET_COMPILER_LIST_REQUEST,
+  payload,
+});
+
+export const getCompilerListSuccess = (data: Contract) => {
+  return {
+    type: GET_COMPILER_LIST_SUCCESS,
+    data,
+  };
+};
+
+export const getCompilerListFailed = (error: any) => ({
+  type: GET_COMPILER_LIST_FAILED,
+  error,
+});
+
+export const verifyContract = (payload: any) => ({
+  type: VERIFY_CONTRACT_REQUEST,
+  payload,
+});
+
+export const verifyContractSuccess = (data: Contract) => {
+  return {
+    type: VERIFY_CONTRACT_SUCCESS,
+    data,
+  };
+};
+
+export const verifyContractFailed = (error: any) => ({
+  type: VERIFY_CONTRACT_FAILED,
   error,
 });

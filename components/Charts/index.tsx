@@ -1,33 +1,34 @@
-import { ArcElement, Chart } from "chart.js";
+import { ArcElement, Chart as ChartJS, LineElement, SubTitle, Tooltip } from 'chart.js';
 
-import { Doughnut } from "react-chartjs-2";
+import { Doughnut } from 'react-chartjs-2';
 import React from "react";
 
-Chart.register(ArcElement);
+ChartJS.register(ArcElement, Tooltip, SubTitle, LineElement);
 
 const CustomDoughnutChart = (chartData: any) => {
-
-  const options = {
-    tooltips: {
-      mode: "index",
-      intersect: false,
-    },
-    hover: {
-      mode: "index",
-      intersect: false,
-    },
-  };
 
   const generateArrData = () => {
     let arrData: any = [];
 
-    chartData?.data.map((item: any) => arrData.push(item?.value));
+    chartData?.data.map((item: any) => {
+      arrData.push(item?.value)
+    });
 
     return arrData;
   };
 
+  const generateArrLabel = () => {
+    let arrLabel: any = [];
+
+    chartData?.data.map((item: any) => {
+      arrLabel.push(item?.name)
+    });
+
+    return arrLabel;
+  }
+
   const data = {
-    labels: ["a", "b", "c"],
+    labels: generateArrLabel(),
     datasets: [
       {
         data: generateArrData(),
@@ -39,7 +40,9 @@ const CustomDoughnutChart = (chartData: any) => {
       },
     ],
   };
-  return <Doughnut data={data} options={options} />;
+
+  
+  return <Doughnut data={data} />;
 };
 
 export default CustomDoughnutChart;

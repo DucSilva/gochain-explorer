@@ -29,7 +29,7 @@ const homeReducer = (state = initialState, action: any) => {
       const { payload } = action;
       return {
         ...state,
-        isLoading: true,
+        // isLoading: true,
         payload,
       };
     }
@@ -38,7 +38,7 @@ const homeReducer = (state = initialState, action: any) => {
       const { data } = action;
       return {
         ...state,
-        isLoading: false,
+        // isLoading: false,
         supplyStats: data,
       };
     }
@@ -47,7 +47,7 @@ const homeReducer = (state = initialState, action: any) => {
       const { error } = action;
       return {
         ...state,
-        isLoading: false,
+        // isLoading: false,
         error,
       };
     }
@@ -56,7 +56,7 @@ const homeReducer = (state = initialState, action: any) => {
       const { payload } = action;
       return {
         ...state,
-        isLoading: true,
+        // isLoading: true,
         payload,
       };
     }
@@ -65,7 +65,7 @@ const homeReducer = (state = initialState, action: any) => {
       const { data } = action;
       return {
         ...state,
-        isLoading: false,
+        // isLoading: false,
         stats: data,
       };
     }
@@ -74,7 +74,7 @@ const homeReducer = (state = initialState, action: any) => {
       const { error } = action;
       return {
         ...state,
-        isLoading: false,
+        // isLoading: false,
         error,
       };
     }
@@ -83,7 +83,7 @@ const homeReducer = (state = initialState, action: any) => {
       const { payload } = action;
       return {
         ...state,
-        isLoading: true,
+        // isLoading: true,
         payload,
       };
     }
@@ -92,7 +92,7 @@ const homeReducer = (state = initialState, action: any) => {
       const { data } = action;
       return {
         ...state,
-        isLoading: false,
+        // isLoading: false,
         blocks: data,
       };
     }
@@ -101,7 +101,7 @@ const homeReducer = (state = initialState, action: any) => {
       const { error } = action;
       return {
         ...state,
-        isLoading: false,
+        // isLoading: false,
         error,
       };
     }

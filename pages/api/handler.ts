@@ -9,6 +9,7 @@ import {
 
 import { Account } from "web3-core";
 import Axios from "axios";
+import { Transaction } from '@Models/transaction.model';
 import Web3 from "web3";
 
 const ins = Axios.create({
@@ -166,4 +167,22 @@ export const request = {
   getBlockNumber() {
     return web3.getBlockNumber();
   },
+
+  async processTransaction(tx: Transaction) {
+    console.log('tx', tx)
+    if (tx?.input_data && tx?.input_data !== '0x' && tx?.input_data !== '0X') {
+      // code here
+    }
+  },
+
+  
+  async getCompilersList() {
+    return ins.get('/compiler');
+  },
+
+  async compile(data: any) {
+    return ins.post('/verify', data);
+  }
+
+
 };
