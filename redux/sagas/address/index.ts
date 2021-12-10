@@ -121,13 +121,20 @@ function* getAddressInternal({ payload }: any) {
 
   try {
     if (addrHash?.addrHash) {
-      const { data } = yield call(
-        request.getAddressInternal,
-        addrHash?.addrHash,
-        _data
-      );
-
-      yield put(getAddressInternalSuccess(data));
+      if (pageSize && currentPage) {
+        const { data } = yield call(
+          request.getAddressInternal,
+          addrHash?.addrHash,
+          _data
+        );
+        yield put(getAddressInternalSuccess(data));
+      } else {
+        const { data } = yield call(
+          request.getAddressInternal,
+          addrHash?.addrHash
+        );
+        yield put(getAddressInternalSuccess(data));
+      }
     }
   } catch (error: any) {
     yield put(
@@ -259,20 +266,19 @@ function* getTransactionTx({ payload }: any): any {
 
       if (res?.data) {
         let tx: Transaction | null = res?.data;
-        console.log('tx', tx)
         if (!tx) {
+          let _data: any = yield call(request.getTxData, addrHash);
+          yield put(getTransactionTxSuccess(_data));
         }
         tx.input_data = "0x" + tx.input_data;
         tx.parsedLogs = JSON.parse(tx.logs);
         tx.prettifiedLogs = JSON.stringify(tx.parsedLogs, null, "\t");
         let data: any = yield call(request.processTransaction, tx);
-        console.log('data', data)
 
-        yield put(getTransactionTxSuccess(res?.data));
+        yield put(getTransactionTxSuccess(data));
       }
     }
   } catch (error: any) {
-    console.log('error', error)
     yield put(
       toastInformation({
         show: true,
