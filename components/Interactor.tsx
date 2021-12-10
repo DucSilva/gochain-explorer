@@ -237,7 +237,7 @@ const Interactor = ({ addrHash }: any) => {
                 </div>
                 {/* </ng-container> */}
                 {/* <div *ngIf="selectedFunction.payable" className="form-group row"> */}
-                {selectedFunction?.payable && (
+                {/* {selectedFunction?.payable && (
                   <div className="form-group row">
                     <div className="col-md-2"></div>
                     <div className="col-md-10">
@@ -248,9 +248,9 @@ const Interactor = ({ addrHash }: any) => {
                       />
                     </div>
                   </div>
-                )}
+                )} */}
                 {/* <div *ngIf="!selectedFunction.constant || selectedFunction.payable" className="form-group row"> */}
-                {(!selectedFunction?.constant || selectedFunction?.payable) && (
+                {/* {(!selectedFunction?.constant || selectedFunction?.payable) && (
                   <div className="form-group row">
                     <label className="col-md-2" htmlFor="gasLimit">
                       Gas Limit*:
@@ -266,7 +266,7 @@ const Interactor = ({ addrHash }: any) => {
                       />
                     </div>
                   </div>
-                )}
+                )} */}
               </>
             )}
             {/* </ng-container> */}
