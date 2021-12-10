@@ -1,11 +1,14 @@
 import { Account, TransactionConfig, TransactionReceipt } from "web3-core";
 import {
   CREATE_ACCOUNT_REQUEST,
+  GET_RPC_PROVIDER_REQUEST,
   GET_WALLET_ADDR_REQUEST,
   OPEN_WALLET_REQUEST,
   SEND_GO_REQUEST,
   createAccountFailed,
   createAccountSuccess,
+  getRPCProviderFailed,
+  getRPCProviderSuccess,
   getWalletAddrFailed,
   getWalletAddrSuccess,
   openWalletFailed,
@@ -21,6 +24,26 @@ import _ from "lodash";
 import { isValidJSON } from "@Utils/functions";
 import { request } from "@Pages/api/handler";
 import { toastInformation } from "@Redux/actions/home";
+
+function* getRpcProvider({ payload }: any): any {
+  try {
+    let data = yield call(request.getRpcProvider);
+    if (!_.isEmpty(data)) {
+      if (!_.isEmpty(data?.content) && !_.isEmpty(data?.status)) {
+        yield put(
+          toastInformation({
+            show: true,
+            content: `${data?.content}`,
+            status: `${data?.status}`,
+          })
+        );
+      }
+      yield put(getRPCProviderSuccess(data));
+    }
+  } catch (error) {
+    yield put(getRPCProviderFailed(error));
+  }
+}
 
 function* openWallets({ payload }: any): any {
   try {
@@ -169,5 +192,6 @@ export function* walletSaga() {
     takeLatest(GET_WALLET_ADDR_REQUEST, getWalletAddress),
     takeLatest(CREATE_ACCOUNT_REQUEST, createAccountRequest),
     takeLatest(SEND_GO_REQUEST, sendGORequest),
+    takeLatest(GET_RPC_PROVIDER_REQUEST, getRpcProvider),
   ]);
 }

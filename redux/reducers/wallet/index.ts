@@ -3,6 +3,9 @@ import {
   CREATE_ACCOUNT_FAILED,
   CREATE_ACCOUNT_REQUEST,
   CREATE_ACCOUNT_SUCCESS,
+  GET_RPC_PROVIDER_FAILED,
+  GET_RPC_PROVIDER_REQUEST,
+  GET_RPC_PROVIDER_SUCCESS,
   GET_WALLET_ADDR_FAILED,
   GET_WALLET_ADDR_REQUEST,
   GET_WALLET_ADDR_SUCCESS,
@@ -159,6 +162,31 @@ const walletReducer = (state = initialState, action: any) => {
         ...state,
         error,
         isProcessing: false,
+      };
+    }
+
+    case GET_RPC_PROVIDER_REQUEST: {
+      const { payload } = action;
+      return {
+        ...state,
+        payload,
+        receipt: {},
+      };
+    }
+
+    case GET_RPC_PROVIDER_SUCCESS: {
+      const { data } = action;
+      return {
+        ...state,
+        provide: data,
+      };
+    }
+
+    case GET_RPC_PROVIDER_FAILED: {
+      const { error } = action;
+      return {
+        ...state,
+        error,
       };
     }
 

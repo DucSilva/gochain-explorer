@@ -17,6 +17,10 @@ export const SEND_GO_REQUEST = "SEND_GO_REQUEST";
 export const SEND_GO_SUCCESS = "SEND_GO_SUCCESS";
 export const SEND_GO_FAILED = "SEND_GO_FAILED";
 
+export const GET_RPC_PROVIDER_REQUEST = "GET_RPC_PROVIDER_REQUEST";
+export const GET_RPC_PROVIDER_SUCCESS = "GET_RPC_PROVIDER_SUCCESS";
+export const GET_RPC_PROVIDER_FAILED = "GET_RPC_PROVIDER_FAILED";
+
 export const openWallet = (payload: any) => ({
   type: OPEN_WALLET_REQUEST,
   payload,
@@ -97,5 +101,22 @@ export const sendGOSuccess = (data: any) => {
 
 export const sendGOFailed = (error: any) => ({
   type: SEND_GO_FAILED,
+  error,
+});
+
+export const getRPCProvider = (payload: any) => ({
+  type: GET_RPC_PROVIDER_REQUEST,
+  payload,
+});
+
+export const getRPCProviderSuccess = (data: any) => {
+  return {
+    type: GET_RPC_PROVIDER_SUCCESS,
+    data,
+  };
+};
+
+export const getRPCProviderFailed = (error: any) => ({
+  type: GET_RPC_PROVIDER_FAILED,
   error,
 });

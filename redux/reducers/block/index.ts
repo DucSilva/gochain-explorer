@@ -6,7 +6,7 @@ import {
   GET_BLOCK_TRANSACTION_SUCCESS
 } from '@Redux/actions/block';
 
-const initialState = {
+const initialState: any = {
   isLoading: false,
   error: {},
   transactions: [],
@@ -24,12 +24,12 @@ const blockReducer = (state = initialState, action: any) => {
     }
 
     case GET_BLOCK_TRANSACTION_SUCCESS: {
-      const { data } = action;
+      const { transactions } = action?.data;
 
       return {
         ...state,
         isLoading: false,
-        transactions: data,
+        transactions,
       };
     }
 

@@ -9,7 +9,7 @@ import {
 
 import { Account } from "web3-core";
 import Axios from "axios";
-import { Transaction } from '@Models/transaction.model';
+import { Transaction } from "@Models/transaction.model";
 import Web3 from "web3";
 
 const ins = Axios.create({
@@ -30,69 +30,128 @@ export default function handler(
 }
 
 export const request = {
-  getSupplyStats() {
+  async getRpcProvider() {
+    let data: any = await ins.get("/rpc_provider").then(async (res: any) => {
+      let toastContent = {};
+
+      const metaMaskProvider = new Web3(Web3.givenProvider, null, {
+        transactionConfirmationBlocks: 1,
+      });
+      const web3Provider = new Web3(
+        new Web3.providers.HttpProvider(res?.data),
+        null,
+        { transactionConfirmationBlocks: 1 }
+      );
+
+      if (!metaMaskProvider.currentProvider) {
+        return {
+          content: "Metamask is not enabled",
+          status: "danger",
+        };
+      }
+      let web3NetID = await web3Provider.eth.net.getId(
+        async (err, web3NetID) => {
+          if (err) {
+            return {
+              content: "Metamask is enabled but can't get network id",
+              status: "danger",
+            };
+          }
+        }
+      );
+
+      let metaToast = await metaMaskProvider.eth.net.getId(
+        (err, metamask3NetID) => {
+          if (err) {
+            toastContent = {
+              content:
+                "Metamask is enabled but can't get network id from Metamask",
+              status: "error",
+            };
+          }
+          return toastContent;
+        }
+      );
+
+      if (web3NetID !== metaToast) {
+        toastContent = {
+          content: "Metamask is enabled but networks are different",
+          status: "danger",
+        };
+      } else {
+        toastContent = {
+          metaToast,
+          web3NetID,
+        };
+      }
+      return toastContent;
+    });
+    return data;
+  },
+
+  async getSupplyStats() {
     return ins.get("/supply");
   },
-  getStats() {
+  async getStats() {
     return ins.get("/stats");
   },
-  getRecentBlocks() {
+  async getRecentBlocks() {
     return ins.get("/blocks");
   },
-  getBlockDetail(blockNum: number | string) {
+  async getBlockDetail(blockNum: number | string) {
     return ins.get(`/blocks/${blockNum}`);
   },
-  getBlockTransactions(blockNum: number | string) {
-    return ins.get(`/blocks/${blockNum}/transactions`);
+  async getBlockTransactions(blockNum: number | string, data: any) {
+    return ins.get(`/blocks/${blockNum}/transactions`, { params: data });
   },
-  getAddress(addrHash: string) {
+  async getAddress(addrHash: string) {
     return ins.get(`/address/${addrHash}`);
   },
-  checkBlockExist(blockHash: string) {
+  async checkBlockExist(blockHash: string) {
     return ins.head("/blocks/" + blockHash);
   },
-  checkTransactionExist(blockHash: string) {
+  async checkTransactionExist(blockHash: string) {
     return ins.head("/transaction/" + blockHash);
   },
-  getAddressTransactions(addrHash: string, data?: any) {
+  async getAddressTransactions(addrHash: string, data?: any) {
     return ins.get("/address/" + addrHash + "/transactions", { params: data });
   },
-  getAddressInternal(addrHash: string, data?: any) {
+  async getAddressInternal(addrHash: string, data?: any) {
     return ins.get("/address/" + addrHash + "/internal_transactions", {
       params: data,
     });
   },
-  getAddressTokenHolders(addrHash: string, data?: any) {
+  async getAddressTokenHolders(addrHash: string, data?: any) {
     return ins.get("/address/" + addrHash + "/holders", {
       params: data,
     });
   },
-  getAddressTokenTXS(addrHash: string, data?: any) {
+  async getAddressTokenTXS(addrHash: string, data?: any) {
     return ins.get("/address/" + addrHash + "/holders", {
       params: data,
     });
   },
-  getOwnedTokens(addrHash: string, data?: any) {
+  async getOwnedTokens(addrHash: string, data?: any) {
     return ins.get("/address/" + addrHash + "/owned_tokens", {
       params: data,
     });
   },
-  getContract(addrHash: string) {
+  async getContract(addrHash: string) {
     return ins.get("/address/" + addrHash + "/contract");
   },
-  getSignerList() {
+  async getSignerList() {
     return ins.get("/signers/list");
   },
-  getSignerStats() {
+  async getSignerStats() {
     return ins.get("/signers/stats");
   },
-  getAccountWallet(privateKey: string) {
+  async getAccountWallet(privateKey: string) {
     return web3.accounts.privateKeyToAccount(privateKey);
   },
-  getBalance(address: string) {
+  async getBalance(address: string) {
     return web3.getBalance(address);
   },
-  createAccount() {
+  async createAccount() {
     return web3.accounts.create();
   },
   async sendTx(tx: TransactionConfig, account: Account) {
@@ -101,19 +160,19 @@ export const request = {
       .then(async (res: any) => {
         tx.nonce = res;
 
-       return web3.accounts
+        return web3.accounts
           .signTransaction(tx, account.privateKey)
           .then(async (_data: SignedTransaction) => {
             let receipt = await web3.sendSignedTransaction(
               _data?.rawTransaction
-              );
+            );
             return receipt;
           });
       });
     return data;
   },
 
-  getTxData(hash: string) {
+  async getTxData(hash: string) {
     // return this.w3Call.pipe(
     //   concatMap((web3: Web3) => {
     //     return forkJoin<Web3Tx, TransactionReceipt>([
@@ -156,7 +215,7 @@ export const request = {
     // );
   },
 
-  getTransaction(hash: string, nonceId: string): any {
+  async getTransaction(hash: string, nonceId: string): any {
     if (nonceId) {
       return ins.get("/address/" + hash + "/tx/" + nonceId);
     } else {
@@ -164,25 +223,22 @@ export const request = {
     }
   },
 
-  getBlockNumber() {
+  async getBlockNumber() {
     return web3.getBlockNumber();
   },
 
   async processTransaction(tx: Transaction) {
-    console.log('tx', tx)
-    if (tx?.input_data && tx?.input_data !== '0x' && tx?.input_data !== '0X') {
+    console.log("tx", tx);
+    if (tx?.input_data && tx?.input_data !== "0x" && tx?.input_data !== "0X") {
       // code here
     }
   },
 
-  
   async getCompilersList() {
-    return ins.get('/compiler');
+    return ins.get("/compiler");
   },
 
   async compile(data: any) {
-    return ins.post('/verify', data);
-  }
-
-
+    return ins.post("/verify", data);
+  },
 };

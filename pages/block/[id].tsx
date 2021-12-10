@@ -58,12 +58,12 @@ const BlockDetail = () => {
   }, [queryId]);
 
   React.useEffect(() => {
-    if (queryId) {
+    if (blockDetail) {
       dispatch(
-        getBlockTransactions({ addrHash: queryId, currentPage, pageSize })
+        getBlockTransactions({ addrHash: blockDetail?.number, currentPage, pageSize })
       );
     }
-  }, [currentPage, pageSize, queryId]);
+  }, [currentPage, pageSize, queryId, blockDetail]);
 
   return (
     <div className={styles.container}>
@@ -249,7 +249,6 @@ const BlockDetail = () => {
                               {numberWithCommas(
                                 weiToGO(tx?.value, false, true)
                               )}
-                              {tx.value}
                             </td>
                           </tr>
                         );

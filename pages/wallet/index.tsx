@@ -1,3 +1,4 @@
+import { getRPCProvider, openWallet } from "@Redux/actions/wallet";
 import { useDispatch, useSelector } from "react-redux";
 
 import AppLayout from "@Components/Layout/AppLayout";
@@ -6,7 +7,6 @@ import InputFieldForm from "@Components/Partials/InputField";
 import Link from "next/link";
 import type { NextPage } from "next";
 import React from "react";
-import { openWallet } from "@Redux/actions/wallet";
 import styles from "@Styles/Home.module.css";
 import { useRouter } from "next/router";
 
@@ -23,6 +23,10 @@ const Wallet: NextPage = () => {
       dispatch(openWallet({ privateKey, router }));
     }
   };
+
+  React.useEffect(() => {
+    dispatch(getRPCProvider({}));
+  }, []);
 
   return (
     <div className={styles.container}>
