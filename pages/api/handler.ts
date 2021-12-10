@@ -56,7 +56,7 @@ const processTransactionLogs = ([events, web3, tx]: [
 ]): ProcessedLog[] => {
   // Create one observable per unique address.
   const addrs: string = "";
-  tx.parsedLogs.reduce(async (acc: object, log: TxLog): any => {
+  tx.parsedLogs.reduce(async (acc: object, log: TxLog) => {
     if (!acc[log.address] && !!log.topics.length && !!log.topics[0]) {
       acc[log.address] = await ins.get(`/address/${log.address}`);
     }
@@ -72,7 +72,7 @@ const processTransactionLogs = ([events, web3, tx]: [
     processedLog.data = [];
     let abiItem: AbiItem;
     let decodedLog: object;
-    const address: Address = [log.address];
+    const address = [log.address];
     if (address) {
       if (!!log.topics.length && !!log.topics[0]) {
         const eventSignature = <string>log.topics[0];
@@ -417,7 +417,7 @@ export const request = {
     return data;
   },
 
-  async getTxData(hash: string): any {
+  async getTxData(hash: string) {
     let Web3Tx: Web3Tx = await web3.getTransaction(hash);
     let TransactionReceipt: TransactionReceipt =
       await web3.getTransactionReceipt(hash);
@@ -450,7 +450,7 @@ export const request = {
     return finalTx;
   },
 
-  async getTransaction(hash: string, nonceId: string): any {
+  async getTransaction(hash: string, nonceId: string) {
     if (nonceId) {
       return ins.get("/address/" + hash + "/tx/" + nonceId);
     } else {
@@ -514,7 +514,6 @@ export const request = {
       let { data: abiJson } = await Axios.get(
         "/assets/abi/events.json",
         null,
-        true
       );
       let logs = await processTransactionLogs([abiJson, web3, tx]);
       tx.processedLogs = logs;

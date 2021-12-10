@@ -32,7 +32,7 @@ const SupplyStats = () => {
             </span>{" "}
             GO
             {supplyStats?.fees_burned &&
-              transform(supplyStats?.fees_burned) > 0 && (
+              transform(supplyStats?.fees_burned) > "0" && (
                 <>
                   <br />
                   <span className="text-monospace">
