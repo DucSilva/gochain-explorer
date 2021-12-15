@@ -31,6 +31,6 @@ function MyApp({ Component, pageProps }: any) {
 const makeStore = (context: Context) => createStore(initializeStore);
 
 // export an assembled wrapper
-export const wrapper = createWrapper<Store<State>>(makeStore, { debug: true });
+export const wrapper = createWrapper<Store>(makeStore, { debug: true });
 
 export default wrapper.withRedux(MyApp);
