@@ -52,43 +52,43 @@ export class QueryParams {
 
   calculateTotalPage() {
     this.totalPage = Math.ceil(this.total / this._limit);
-    this.totalPage$.next(this.totalPage);
+    // this.totalPage$.next(this.totalPage);
   }
 
   init() {
-    this.state.next(this.params);
+    // this.state.next(this.params);
   }
 
   next() {
     this.page++;
     this.skip += this._limit;
     this.currentTotal = this.page * this._limit;
-    this.state.next(this.params);
+    // this.state.next(this.params);
   }
 
   previous() {
     this.page--;
     this.skip -= this._limit;
-    this.state.next(this.params);
+    // this.state.next(this.params);
   }
 
   toPage(page: number) {
     this.page = page;
-    this.page$.next(this.page);
+    // this.page$.next(this.page);
     this.skip = (this.page - 1) * this._limit;
-    this.state.next(this.params);
+    // this.state.next(this.params);
   }
 
   toStart() {
     this.page = 1;
     this.skip = 0;
-    this.state.next(this.params);
+    // this.state.next(this.params);
   }
 
   toEnd() {
     this.page = this.totalPage;
     this.skip = (this.page - 1) * this._limit;
-    this.state.next(this.params);
+    // this.state.next(this.params);
   }
 
   resetFilter() {

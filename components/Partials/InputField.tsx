@@ -6,8 +6,8 @@ const InputFieldForm = ({
   placeholder = "",
   name = "",
   required = true,
-  handleChangeValue = () => null,
-  renderFooter = () => null,
+  handleChangeValue = () => {},
+  renderFooter = () => {},
   value=""
 }: any) => {
   const [passwordField, $passwordField] = React.useState<any | null>({

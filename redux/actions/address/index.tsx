@@ -49,6 +49,10 @@ export const VERIFY_CONTRACT_REQUEST = "VERIFY_CONTRACT_REQUEST";
 export const VERIFY_CONTRACT_SUCCESS = "VERIFY_CONTRACT_SUCCESS";
 export const VERIFY_CONTRACT_FAILED = "VERIFY_CONTRACT_FAILED";
 
+export const GET_ABI_REQUEST = "GET_ABI_REQUEST";
+export const GET_ABI_SUCCESS = "GET_ABI_SUCCESS";
+export const GET_ABI_FAILED = "GET_ABI_FAILED";
+
 export const getAddress = (payload: any) => ({
   type: GET_ADDRESS_REQUEST,
   payload,
@@ -233,5 +237,22 @@ export const verifyContractSuccess = (data: Contract) => {
 
 export const verifyContractFailed = (error: any) => ({
   type: VERIFY_CONTRACT_FAILED,
+  error,
+});
+
+export const getAbiFunction = (payload: any) => ({
+  type: GET_ABI_REQUEST,
+  payload,
+});
+
+export const getAbiFunctionSuccess = (data: Contract) => {
+  return {
+    type: GET_ABI_SUCCESS,
+    data,
+  };
+};
+
+export const getAbiFunctionFailed = (error: any) => ({
+  type: GET_ABI_FAILED,
   error,
 });

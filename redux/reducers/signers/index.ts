@@ -7,7 +7,7 @@ import {
   GET_SIGNER_STATS_SUCCESS,
 } from "@Redux/actions/signers/index";
 
-const initialState = {
+const initialState:any = {
   isLoading: false,
   signers: [],
   statsData: [],

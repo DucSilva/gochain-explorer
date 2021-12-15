@@ -36,28 +36,12 @@ const SignerTab = ({ stat }: any) => {
           <table className="table table-bordered table-signer-custom">
             <thead>
               <tr className="border-bottom-0">
-                <th>
-                  <sv-default-sorter by="data.signer_address">
-                    Account
-                  </sv-default-sorter>
-                </th>
-                <th>
-                  <sv-default-sorter by="data.name">Name</sv-default-sorter>
-                </th>
-                <th>
-                  <sv-default-sorter by="data.region">Region</sv-default-sorter>
-                </th>
-                <th>
-                  <sv-default-sorter by="data.url">URL</sv-default-sorter>
-                </th>
-                <th className="text-right">
-                  <sv-default-sorter by="blocks_count">
-                    Blocks
-                  </sv-default-sorter>
-                </th>
-                <th className="text-right">
-                  <sv-default-sorter by="percent">%</sv-default-sorter>
-                </th>
+                <th>Account</th>
+                <th>Name</th>
+                <th>Region</th>
+                <th>URL</th>
+                <th className="text-right">Blocks</th>
+                <th className="text-right">%</th>
               </tr>
             </thead>
             <tbody>

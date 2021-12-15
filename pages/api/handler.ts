@@ -49,14 +49,13 @@ export default function handler(
   res.status(200).json({ name: "John Doe" });
 }
 
-const processTransactionLogs = ([events, web3, tx]: [
-  ContractEventsAbi,
-  Web3,
+const processTransactionLogs = ([events, tx]: [
+  any,
   any
 ]): ProcessedLog[] => {
   // Create one observable per unique address.
   const addrs: string = "";
-  tx.parsedLogs.reduce(async (acc: object, log: TxLog): any => {
+  tx.parsedLogs.reduce(async (acc: any, log: TxLog) => {
     if (!acc[log.address] && !!log.topics.length && !!log.topics[0]) {
       acc[log.address] = await ins.get(`/address/${log.address}`);
     }
@@ -70,13 +69,13 @@ const processTransactionLogs = ([events, web3, tx]: [
     processedLog.contract_address = log.address;
     processedLog.removed = log.removed;
     processedLog.data = [];
-    let abiItem: AbiItem;
+    let abiItem: any;
     let decodedLog: object;
-    const address: Address = [log.address];
+    const address: any = [log.address];
     if (address) {
       if (!!log.topics.length && !!log.topics[0]) {
-        const eventSignature = <string>log.topics[0];
-        const knownEvent: object = events[eventSignature];
+        const eventSignature = <any>log.topics[0];
+        const knownEvent: any = events[eventSignature];
         if (knownEvent) {
           if (Object.keys(knownEvent).length === 1) {
             // Only once choice.
@@ -97,7 +96,7 @@ const processTransactionLogs = ([events, web3, tx]: [
                   ? null
                   : log.data;
               const topics: string[] = <string[]>log.topics.slice(1);
-              decodedLog = web3.eth.abi.decodeLog(abiItem.inputs, data, topics);
+              decodedLog = web3.abi.decodeLog(abiItem.inputs, data, topics);
             } catch (e) {
               console.error("error occurred while decoding log", e);
             }
@@ -154,7 +153,7 @@ const processTransactionInputDeploy = (
 
 const processAbiItem = (
   input: AbiInput,
-  decoded: object,
+  decoded: any,
   address: Address
 ): ProcessedABIItem => {
   const item = new ProcessedABIItem();
@@ -227,11 +226,10 @@ const processAbiItem = (
   return item;
 };
 
-const processTransactionInputTo = ([abis, address, contract, web3, tx]: [
+const processTransactionInputTo = ([abis, address, contract, tx]: [
   ContractAbiByID,
   Address,
   Contract,
-  Web3,
   any
 ]): ProcessedABIData => {
   const processedInputData = new ProcessedABIData();
@@ -243,7 +241,7 @@ const processTransactionInputTo = ([abis, address, contract, web3, tx]: [
     processedInputData.title = `${contract.contract_name}.`;
     // TODO this is inefficient - could be cached or precomputed
     c = contract.abi.find(
-      (a) => methodId === web3.eth.abi.encodeFunctionSignature(a)
+      (a) => methodId === web3.abi.encodeFunctionSignature(a)
     );
   }
   if (!c) {
@@ -257,7 +255,7 @@ const processTransactionInputTo = ([abis, address, contract, web3, tx]: [
   }
   processedInputData.title += c.name;
   try {
-    const d: object = web3.eth.abi.decodeParameters(
+    const d: object = web3.abi.decodeParameters(
       c.inputs,
       "0x" + tx.input_data.slice(10)
     );
@@ -278,13 +276,10 @@ export const request = {
     let data: any = await ins.get("/rpc_provider").then(async (res: any) => {
       let toastContent = {};
 
-      const metaMaskProvider = new Web3(Web3.givenProvider, null, {
-        transactionConfirmationBlocks: 1,
-      });
+      const metaMaskProvider = new Web3(Web3.givenProvider, null);
       const web3Provider = new Web3(
         new Web3.providers.HttpProvider(res?.data),
         null,
-        { transactionConfirmationBlocks: 1 }
       );
 
       if (!metaMaskProvider.currentProvider) {
@@ -361,7 +356,6 @@ export const request = {
     return ins.get("/address/" + addrHash + "/transactions", { params: data });
   },
   async getAddressInternal(addrHash: string, data?: any) {
-    console.log('data', data)
     return ins.get("/address/" + addrHash + "/internal_transactions", {
       params: data,
     });
@@ -417,7 +411,7 @@ export const request = {
     return data;
   },
 
-  async getTxData(hash: string): any {
+  async getTxData(hash: string) {
     let Web3Tx: Web3Tx = await web3.getTransaction(hash);
     let TransactionReceipt: TransactionReceipt =
       await web3.getTransactionReceipt(hash);
@@ -450,7 +444,7 @@ export const request = {
     return finalTx;
   },
 
-  async getTransaction(hash: string, nonceId: string): any {
+  async getTransaction(hash: string, nonceId: string) {
     if (nonceId) {
       return ins.get("/address/" + hash + "/tx/" + nonceId);
     } else {
@@ -469,12 +463,11 @@ export const request = {
         let abiJson = await Axios.get(
           "/assets/abi/functions.json",
           null,
-          true
         ).then((res) => {
-          let abi: ContractAbi = <ContractAbi>{};
+          let abi: any = <ContractAbi>{};
           let abiByID: ContractAbiByID = {};
           Object.entries(res?.data).forEach(
-            (value: [FunctionName, AbiItemIDed]) => {
+            (value: any) => {
               abi[value[0]] = <AbiItem>value[1];
               abiByID[value[1].id] = <AbiItem>value[1];
             }
@@ -492,7 +485,6 @@ export const request = {
             abiJson,
             contract,
             address,
-            Web3,
             tx,
           ]);
         }
@@ -507,16 +499,13 @@ export const request = {
       }
       // return tx;
     }
-    console.log("!!tx.parsedLogs.length", !!tx.parsedLogs.length);
     if (!!tx.parsedLogs.length) {
-      console.log("tx", tx);
 
       let { data: abiJson } = await Axios.get(
         "/assets/abi/events.json",
         null,
-        true
       );
-      let logs = await processTransactionLogs([abiJson, web3, tx]);
+      let logs = await processTransactionLogs([abiJson, tx]);
       tx.processedLogs = logs;
 
       return tx;
@@ -532,6 +521,21 @@ export const request = {
   },
 
   async getFunctionsAbi() {
-    return ins.get("/assets/abi/functions.json", null);
+    let abiJson = await Axios.get(
+      "/assets/abi/functions.json",
+      null,
+    ).then((res) => {
+      let abi: any = <ContractAbi>{};
+      let abiByID: ContractAbiByID = {};
+      Object.entries(res?.data).forEach(
+        (value: any) => {
+          abi[value[0]] = <AbiItem>value[1];
+          abiByID[value[1].id] = <AbiItem>value[1];
+        }
+      );
+      return abi;
+    });
+
+    return abiJson;
   },
 };

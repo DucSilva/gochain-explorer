@@ -1,17 +1,23 @@
-import { ArcElement, Chart as ChartJS, LineElement, SubTitle, Tooltip } from 'chart.js';
+import {
+  ArcElement,
+  Chart as ChartJS,
+  LineElement,
+  SubTitle,
+  Tooltip,
+} from "chart.js";
 
-import { Doughnut } from 'react-chartjs-2';
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Doughnut } from "react-chartjs-2";
 import React from "react";
 
-ChartJS.register(ArcElement, Tooltip, SubTitle, LineElement);
+ChartJS.register(ArcElement, Tooltip, SubTitle, LineElement, ChartDataLabels);
 
 const CustomDoughnutChart = (chartData: any) => {
-
   const generateArrData = () => {
     let arrData: any = [];
 
     chartData?.data.map((item: any) => {
-      arrData.push(item?.value)
+      arrData.push(item?.value);
     });
 
     return arrData;
@@ -21,11 +27,11 @@ const CustomDoughnutChart = (chartData: any) => {
     let arrLabel: any = [];
 
     chartData?.data.map((item: any) => {
-      arrLabel.push(item?.name)
+      arrLabel.push(item?.name);
     });
 
     return arrLabel;
-  }
+  };
 
   const data = {
     labels: generateArrLabel(),
@@ -41,7 +47,6 @@ const CustomDoughnutChart = (chartData: any) => {
     ],
   };
 
-  
   return <Doughnut data={data} />;
 };
 

@@ -45,7 +45,7 @@ export const MENU_ITEMS: MenuItem[] = [
 
 export const DEFAULT_GAS_LIMIT = 21000;
 
-export const TOKEN_TYPES = {
+export const TOKEN_TYPES:any = {
   Go20: "GO20",
   Go20Burnable: "GO20 Burnable",
   Go20Capped: "GO20 Capped",
@@ -80,7 +80,7 @@ export const TOKEN_TYPES = {
   GoFS: "GoFS",
 };
 
-export const ERC_INTERFACE_IDENTIFIERS = {
+export const ERC_INTERFACE_IDENTIFIERS:any = {
   [ErcName.AllFunctions]: Object.keys(FunctionName),
   [ErcName.Go20]: [
     FunctionName.Allowance,

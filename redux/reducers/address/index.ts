@@ -1,6 +1,9 @@
 // import action type
 
 import {
+  GET_ABI_FAILED,
+  GET_ABI_REQUEST,
+  GET_ABI_SUCCESS,
   GET_ADDRESS_FAILED,
   GET_ADDRESS_INTERNAL_FAILED,
   GET_ADDRESS_INTERNAL_REQUEST,
@@ -33,7 +36,7 @@ import {
   GET_TRANSACTION_TX_SUCCESS,
   VERIFY_CONTRACT_FAILED,
   VERIFY_CONTRACT_REQUEST,
-  VERIFY_CONTRACT_SUCCESS,
+  VERIFY_CONTRACT_SUCCESS
 } from "@Redux/actions/address/index";
 
 const initialState: any = {
@@ -50,6 +53,7 @@ const initialState: any = {
   tx: {},
   recentBlockNumber: "",
   compilers: [],
+  abi: []
 };
 
 const addressReducer = (state = initialState, action: any) => {
@@ -358,6 +362,34 @@ const addressReducer = (state = initialState, action: any) => {
       return {
         ...state,
         isLoading: false,
+        error,
+      };
+    }
+
+    case GET_ABI_REQUEST: {
+      const { payload } = action;
+      return {
+        ...state,
+        // isLoading: true,
+        payload,
+      };
+    }
+
+    case GET_ABI_SUCCESS: {
+      const { data } = action;
+
+      return {
+        ...state,
+        // isLoading: false,
+        abi: data,
+      };
+    }
+
+    case GET_ADDRESS_FAILED: {
+      const { error } = action;
+      return {
+        ...state,
+        // isLoading: false,
         error,
       };
     }

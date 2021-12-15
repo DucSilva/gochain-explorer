@@ -1,6 +1,7 @@
 import * as Effects from "redux-saga/effects";
 
 import {
+  GET_ABI_REQUEST,
   GET_ADDRESS_INTERNAL_REQUEST,
   GET_ADDRESS_REQUEST,
   GET_ADDRESS_TRANSACTIONS_REQUEST,
@@ -12,6 +13,8 @@ import {
   GET_TOKEN_TXS_REQUEST,
   GET_TRANSACTION_TX_REQUEST,
   VERIFY_CONTRACT_REQUEST,
+  getAbiFunctionFailed,
+  getAbiFunctionSuccess,
   getAddressFailed,
   getAddressHolderFailed,
   getAddressHolderSuccess,
@@ -351,6 +354,23 @@ function* verifyContractAddress({ payload }: any): any {
   }
 }
 
+function* getAbiFunctions({}: any): any {
+  try {
+    const data = yield call(request.getFunctionsAbi);
+
+    yield put(getAbiFunctionSuccess(data));
+  } catch (error: any) {
+    yield put(
+      toastInformation({
+        show: true,
+        content: _.toString(error?.message),
+        status: "danger",
+      })
+    );
+    yield put(getAbiFunctionFailed(error));
+  }
+}
+
 export function* addressSaga() {
   yield all([
     takeLatest(GET_ADDRESS_REQUEST, getAddressContract),
@@ -364,5 +384,6 @@ export function* addressSaga() {
     takeLatest(GET_RECENT_BLOCK_NUMBER_REQUEST, getBlockNumber),
     takeLatest(GET_COMPILER_LIST_REQUEST, getCompilerLists),
     takeLatest(VERIFY_CONTRACT_REQUEST, verifyContractAddress),
+    takeLatest(GET_ABI_REQUEST, getAbiFunctions),
   ]);
 }

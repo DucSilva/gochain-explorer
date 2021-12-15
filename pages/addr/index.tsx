@@ -1,6 +1,6 @@
 import React from "react";
 
-const Addr = () => {
+const Addr = ():any => {
     return null
 }
 

@@ -91,7 +91,8 @@ export function makeContractBadges(
 export function makeContractAbi(
   functionNames: FunctionName[],
   abi: ContractAbi
-): AbiItem[] {
+  ): AbiItem[] {
+  console.log('functionNames', functionNames)
   const contractAbi: AbiItem[] = [];
   functionNames.forEach((name: FunctionName) => {
     if (abi[name]) {
@@ -163,7 +164,7 @@ export function numberWithCommas(val: any): any {
  * @param addr
  */
 export function getDecodedData(
-  decoded: object,
+  decoded: any,
   abi: AbiItem,
   addr: Address
 ): any[][] {
@@ -172,7 +173,7 @@ export function getDecodedData(
   // for (let j = 0; j < decoded.__length__; j++){
   //   mapR.push([decoded[0], decoded[1]])
   // }
-  Object.keys(decoded).forEach((key) => {
+  Object.keys(decoded).forEach((key:any) => {
     let val = decoded[key];
     if (addr && addr.decimals && TOKEN_ABI_NAMES.includes(abi.name)) {
       val = numberWithCommas(

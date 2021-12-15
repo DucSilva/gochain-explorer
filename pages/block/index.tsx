@@ -1,6 +1,6 @@
 import React from "react";
 
-const Block = () => {
+const Block = ():any => {
     return null
 }
 

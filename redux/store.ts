@@ -53,17 +53,23 @@ import createSagaMiddleware from "redux-saga";
 import rootReducer from "@Redux/reducers/index";
 import rootSaga from "@Redux/sagas/index";
 
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
 const saga = createSagaMiddleware();
 
 const initializeStore = (initialState: any) => {
   const middlewares = [saga];
-  const enhancers = [applyMiddleware(...middlewares)];
+  const enhancers: any = [applyMiddleware(...middlewares)];
 
+  const newLocal: any = {};
   const composeEnhancers =
     process.env.NODE_ENV !== "production" &&
     typeof window === "object" &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
+      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(newLocal)
       : compose;
 
   const store = createStore(

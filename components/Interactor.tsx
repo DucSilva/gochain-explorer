@@ -5,16 +5,18 @@ import {
   makeContractAbi,
   makeContractBadges,
 } from "@Utils/functions";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Address } from "@Models/address.model";
 import { Badge } from "@Models/badge.model";
 import { Contract } from "@Models/contract.model";
 import { ContractAbi } from "@Utils/types";
+import { ERC_INTERFACE_IDENTIFIERS } from "@Utils/constants";
 import { ErcName } from "@Utils/enums";
 import React from "react";
 import _ from "lodash";
 import { abiMethod } from "@Utils/functions";
-import { useSelector } from "react-redux";
+import { getAbiFunction } from "@Redux/actions/address";
 
 const abiTemplates = [
   ErcName.Go20,
@@ -27,39 +29,37 @@ const abiTemplates = [
 let contractBadges: Badge[] = [];
 
 const Interactor = ({ addrHash }: any) => {
-  const { contract, addr } = useSelector((state: any) => state.address) || {};
+  const dispatch = useDispatch();
+  const { contract, addr, abi } =
+  useSelector((state: any) => state.address) || {};
+  console.log('contract', contract)
   let functionResult = "";
 
   const [hasData, $hasData] = React.useState(true);
+  const [erc, setErc] = React.useState("");
   const [contractAddress, $contractAddress] = React.useState("");
   const [contractABI, $contractABI] = React.useState("");
   console.log("contractABI", contractABI);
 
-  const onAbiTemplateSelect = (event: ErcName): any => {
-    console.log("event", event);
-
+  const changeAbiTemplate = (event: any): any => {
+    setErc(event.target.value);
+    console.log("event.target.value", event.target.value);
     // this._commonService.abi$.subscribe((abi: ContractAbi) => {
-    //   const ABI: AbiItem[] = makeContractAbi(ERC_INTERFACE_IDENTIFIERS[ercName], abi);
-    //   this.form.patchValue({
-    //     contractABI: JSON.stringify(ABI, null, 2),
-    //   }, {
-    //     emitEvent: true,
-    //   });
-    // });
-  };
-
-  const changeAbiTemplate = (event: any) => {
-    $contractABI(event.target.value);
+    const ABI: AbiItem[] = makeContractAbi(
+      ERC_INTERFACE_IDENTIFIERS[event.target.value],
+      abi
+    );
+    $contractABI(JSON.stringify(ABI, null, 2));
   };
 
   const handleSubmitForm = (e: any) => {
     e.preventDefault();
   };
 
-  const selectedFunction = () => {};
+  const selectedFunction:any = () => {};
 
   const handleContractData = (address: Address, contract: Contract) => {
-    console.log('address', address)
+    console.log("address", address);
     // this.addr = address;
     contractBadges = makeContractBadges(address, contract);
     console.log("contractBadges", contractBadges);
@@ -97,6 +97,10 @@ const Interactor = ({ addrHash }: any) => {
   React.useEffect(() => {
     handleContractData(addr, contract);
   }, [addr, contract]);
+
+  React.useEffect(() => {
+    dispatch(getAbiFunction({}));
+  }, []);
 
   return (
     <>
@@ -150,8 +154,9 @@ const Interactor = ({ addrHash }: any) => {
                 name="erc"
                 onChange={(value) => changeAbiTemplate(value)}
                 className="border-1"
-                value={contractABI}
+                value={erc}
               >
+                <option disabled className="d-none"></option>
                 {abiTemplates.map((value, index) => (
                   <option key={index} value={value}>
                     {value}
