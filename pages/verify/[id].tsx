@@ -123,7 +123,7 @@ const VerifyContract = () => {
                 web3 tool
               </a>{" "}
               or set the version of the solc compiler in the contract source
-              header using a 'pragma solidity' tag)
+              header using a &apos; pragma solidity &apos; tag)
             </p>
             {/* <form [formGroup]="form" (submit)="onSubmit()"> */}
             <form onSubmit={(e) => handleSubmitForm(e)}>
